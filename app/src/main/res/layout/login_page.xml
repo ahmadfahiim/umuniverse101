@@ -81,7 +81,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/usernameText"
-                android:text="Username or Email"
+                android:text="Email"
                 app:layout_constraintTop_toBottomOf="@id/freeAccount"
                 android:layout_marginStart="15dp"
                 android:layout_marginTop="25dp"
@@ -95,16 +95,16 @@
                 app:layout_constraintLeft_toLeftOf="parent"
                 android:layout_marginStart="15dp"
                 android:layout_marginTop="9dp"
-                android:hint="Username or Email"
+                android:hint="Email"
                 android:paddingStart="10dp"
-                android:id="@+id/usernameField"/>
+                android:id="@+id/emailField"/>
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/passwordText"
                 android:text="Password"
-                app:layout_constraintTop_toBottomOf="@id/usernameField"
+                app:layout_constraintTop_toBottomOf="@id/emailField"
                 android:layout_marginStart="15dp"
                 android:layout_marginTop="25dp"
                 android:textSize="20sp" />
