@@ -25,6 +25,9 @@
             android:name=".Login"
             android:exported="false" />
         <activity
+            android:name=".EventPage"
+            android:exported="false" />
+        <activity
             android:name=".Welcome"
             android:exported="true"
             android:theme="@style/AppTheme">
