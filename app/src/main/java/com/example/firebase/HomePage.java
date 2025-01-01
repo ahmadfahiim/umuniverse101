@@ -13,6 +13,7 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -22,6 +23,7 @@ public class HomePage extends AppCompatActivity {
     Button logoutBtn;
     TextView textView;
     FirebaseUser user;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -52,14 +54,26 @@ public class HomePage extends AppCompatActivity {
             }
         });
 
-        ImageView eventsButton = findViewById(R.id.events_button);
-        eventsButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(), EventPage.class);
-                startActivity(intent);
-                finish();
+        BottomNavigationView bottomNavigationView = findViewById(R.id.bottomNavigationBar);
+        bottomNavigationView.setSelectedItemId(R.id.home);
+
+        bottomNavigationView.setOnItemSelectedListener(item -> {
+            int itemId = item.getItemId();
+            if (itemId == R.id.home) {
+                return true;
+            } else if (itemId == R.id.events) {
+                Intent eventsIntent = new Intent(getApplicationContext(), EventPage.class);
+                startActivity(eventsIntent);
+                return true;
+            } else if (itemId == R.id.bookings) {// To do
+                return true;
+            } else if (itemId == R.id.profile) {
+                Intent profileIntent = new Intent(getApplicationContext(), ProfilePage.class);
+                startActivity(profileIntent);
+                return true;
             }
+            return false;
+
         });
     }
 

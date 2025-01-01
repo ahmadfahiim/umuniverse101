@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:title="Home"
+        android:icon="@drawable/home_4_svgrepo_com"
+        android:id="@+id/home"/>
+    <item android:title="Events"
+        android:icon="@drawable/man_and_woman_cheers_svgrepo_com"
+        android:id="@+id/events"/>
+    <item android:title="Bookings"
+        android:icon="@drawable/event_edit_svgrepo_com"
+        android:id="@+id/bookings"/>
+    <item android:title="Profile"
+        android:icon="@drawable/profile_user"
+        android:id="@+id/profile"/>
+</menu>
