@@ -118,6 +118,15 @@ public class Registration extends AppCompatActivity {
                 }
             }
         });
+
+        goToLogin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // Move to the login page
+                Intent intent = new Intent(getApplicationContext(), Login.class);
+                startActivity(intent);
+            }
+        });
     }
 
 }

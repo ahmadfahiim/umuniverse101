@@ -2,20 +2,16 @@ package com.example.firebase;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.TextView;
 
-import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 public class HomePage extends AppCompatActivity {
 
@@ -23,37 +19,48 @@ public class HomePage extends AppCompatActivity {
     Button logoutBtn;
     TextView textView;
     FirebaseUser user;
+    FirebaseDatabase database;
+    DatabaseReference ref;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        EdgeToEdge.enable(this);
         setContentView(R.layout.home_page);
 
+        // Initialize Firebase and UI components
         auth = FirebaseAuth.getInstance();
         logoutBtn = findViewById(R.id.logout);
+        textView = findViewById(R.id.user_email); // The TextView for displaying the username
         user = auth.getCurrentUser();
-        textView = findViewById(R.id.user_email);
+        database = FirebaseDatabase.getInstance();
+        ref = database.getReference("Users"); // Path to the "Users" node in Firebase
 
+        // Check if the user is logged in
         if (user == null) {
             Intent intent = new Intent(getApplicationContext(), Login.class);
             startActivity(intent);
             finish();
-        }
-        else {
-            textView.setText(user.getEmail());
+        } else {
+            // Fetch the username from Firebase
+            ref.child(user.getUid()).child("username").get().addOnCompleteListener(task -> {
+                if (task.isSuccessful()) {
+                    String username = task.getResult().getValue(String.class);
+                    textView.setText(username); // Display the username in the TextView
+                } else {
+                    textView.setText("Error fetching username");
+                }
+            });
         }
 
-        logoutBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                FirebaseAuth.getInstance().signOut();
-                Intent intent = new Intent(getApplicationContext(), Login.class);
-                startActivity(intent);
-                finish();
-            }
+        // Logout button functionality
+        logoutBtn.setOnClickListener(v -> {
+            auth.signOut();
+            Intent intent = new Intent(getApplicationContext(), Login.class);
+            startActivity(intent);
+            finish();
         });
 
+        // Bottom navigation functionality
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottomNavigationBar);
         bottomNavigationView.setSelectedItemId(R.id.home);
 
@@ -62,20 +69,16 @@ public class HomePage extends AppCompatActivity {
             if (itemId == R.id.home) {
                 return true;
             } else if (itemId == R.id.events) {
-                Intent eventsIntent = new Intent(getApplicationContext(), EventPage.class);
-                startActivity(eventsIntent);
+                startActivity(new Intent(getApplicationContext(), EventPage.class));
                 return true;
-            } else if (itemId == R.id.bookings) {// To do
+            } else if (itemId == R.id.bookings) {
+                // Handle bookings
                 return true;
             } else if (itemId == R.id.profile) {
-                Intent profileIntent = new Intent(getApplicationContext(), ProfilePage.class);
-                startActivity(profileIntent);
+                startActivity(new Intent(getApplicationContext(), ProfilePage.class));
                 return true;
             }
             return false;
-
         });
     }
-
-
 }
