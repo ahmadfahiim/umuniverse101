@@ -94,9 +94,12 @@ public class Registration extends AppCompatActivity {
         mAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
+                String bio = "Placeholder bio. Please add one if you wish.";
+                String faculty = "Placeholder faculty. Please add one if you wish.";
+                int eventsJoined = 0;
                 if (task.isSuccessful()) {
                     String userId = Objects.requireNonNull(mAuth.getCurrentUser()).getUid();
-                    AppUser user = new AppUser(username, email);
+                    AppUser user = new AppUser(username, email, bio, faculty, eventsJoined);
 
                     System.out.println("Authentication successful. User ID: " + userId);
 
