@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp"
+    android:background="#FFFFFF">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <!-- Event Name -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Event Name*"
+            android:textSize="16sp"
+            android:layout_marginBottom="4dp"
+            android:textColor="#000000" />
+
+        <EditText
+            android:id="@+id/etEventName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:background="@drawable/login_container"
+            android:hint="Basketball Practice Game"
+            android:padding="12dp"
+            android:textColor="#000000" />
+
+        <!-- Event Date -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Event Date*"
+            android:textSize="16sp"
+            android:layout_marginBottom="4dp"
+            android:textColor="#000000" />
+
+        <EditText
+            android:id="@+id/etEventDate"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:background="@drawable/login_container"
+            android:focusable="false"
+            android:hint="02-November-2021"
+            android:inputType="date"
+            android:padding="12dp" />
+
+        <!-- Event Time -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Event Time*"
+            android:textSize="16sp"
+            android:layout_marginBottom="4dp"
+            android:textColor="#000000" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <EditText
+                android:id="@+id/etEventStartTime"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:layout_weight="1"
+                android:background="@drawable/login_container"
+                android:focusable="false"
+                android:hint="From"
+                android:padding="12dp" />
+
+            <EditText
+                android:id="@+id/etEventEndTime"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@drawable/login_container"
+                android:focusable="false"
+                android:hint="To"
+                android:padding="12dp" />
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="16dp" />
+
+        <!-- Event Category -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Category*"
+            android:textSize="16sp"
+            android:layout_marginBottom="4dp"
+            android:textColor="#000000" />
+
+        <Spinner
+            android:id="@+id/spinnerCategory"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:background="@drawable/login_container"
+            android:padding="12dp" />
+
+
+        <!-- Event Location -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Location*"
+            android:textSize="16sp"
+            android:layout_marginBottom="4dp"
+            android:textColor="#000000" />
+
+        <EditText
+            android:id="@+id/etEventLocation"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:background="@drawable/login_container"
+            android:hint="Sport Court Northern California, 11..."
+            android:padding="12dp" />
+
+        <!-- Lockdown Error Message -->
+        <TextView
+            android:id="@+id/tvLockdownMessage"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Location in lockdown. This location is inaccessible on the provided date due to COVID lockdown."
+            android:textSize="14sp"
+            android:padding="12dp"
+            android:background="@drawable/login_container"
+            android:textColor="#FF0000"
+            android:visibility="gone" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="16dp" />
+
+        <!-- Submit Button -->
+        <Button
+            android:id="@+id/btnSubmitEvent"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Create Event"
+            android:background="@color/purple_500"
+            android:textColor="#FFFFFF"
+            android:padding="12dp" />
+
+        <Button
+            android:id="@+id/btnBack"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Back" />
+    </LinearLayout>
+
+</ScrollView>

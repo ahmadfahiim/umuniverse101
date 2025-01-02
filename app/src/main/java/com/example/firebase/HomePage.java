@@ -41,15 +41,7 @@ public class HomePage extends AppCompatActivity {
             startActivity(intent);
             finish();
         } else {
-            // Fetch the username from Firebase
-            ref.child(user.getUid()).child("username").get().addOnCompleteListener(task -> {
-                if (task.isSuccessful()) {
-                    String username = task.getResult().getValue(String.class);
-                    textView.setText(username); // Display the username in the TextView
-                } else {
-                    textView.setText("Error fetching username");
-                }
-            });
+            textView.setText(user.getEmail());
         }
 
         // Logout button functionality

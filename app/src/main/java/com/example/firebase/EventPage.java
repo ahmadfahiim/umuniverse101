@@ -2,6 +2,7 @@ package com.example.firebase;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -10,6 +11,10 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.database.*;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.database.DatabaseReference;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,11 +24,38 @@ public class EventPage extends AppCompatActivity {
     private RecyclerView recyclerView;
     private EventAdapter eventAdapter;
     private List<Event> eventList;
+    private ImageView createEventButton;
+    private DatabaseReference databaseReference;
+
+    String databaseURL = "https://umuniverse-1d81d-default-rtdb.asia-southeast1.firebasedatabase.app/";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.event_page);
+
+        // Initialize Firebase Database
+        databaseReference = FirebaseDatabase.getInstance().getReference("events");
+
+        // Initialize RecyclerView
+        recyclerView = findViewById(R.id.recyclerView);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+        eventList = new ArrayList<>();
+        eventAdapter = new EventAdapter(eventList, event -> {
+            // Handle Clicks on Events
+            Toast.makeText(this, "Clicked: " + event.getTitle(), Toast.LENGTH_SHORT).show();
+        });
+        recyclerView.setAdapter(eventAdapter);
+
+        // Fetch Events from Firebase
+        fetchEventsFromFirebase();
+
+        createEventButton = findViewById(R.id.createEvent);
+        createEventButton.setOnClickListener(v -> {
+            Intent createEventIntent = new Intent(EventPage.this, CreateEventActivity.class);
+            startActivity(createEventIntent);
+        });
 
         // Initialize Bottom Navigation
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottomNavigationBar);
@@ -46,22 +78,25 @@ public class EventPage extends AppCompatActivity {
             }
             return false;
         });
-
-        // Initialize RecyclerView
-        recyclerView = findViewById(R.id.recyclerView);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-
-        // Populate Event List
-        eventList = new ArrayList<>();
-        eventList.add(new Event("Football Game", "Sonic Stadium", "~7 KM", "24-Oct-2021", R.drawable.home_4_svgrepo_com, true));
-        eventList.add(new Event("Table Tennis Game", "YMCA Auditorium", "5 KM", "29-Oct-2021", R.drawable.ic_android_black_24dp, true));
-
-        // Initialize Adapter
-        eventAdapter = new EventAdapter(eventList, event -> {
-            // Handle Clicks on Events
-            Toast.makeText(this, "Clicked: " + event.getTitle(), Toast.LENGTH_SHORT).show();
-        });
-
-        recyclerView.setAdapter(eventAdapter);
     }
+
+    private void fetchEventsFromFirebase() {
+        databaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                eventList.clear(); // Clear current list
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    Event event = snapshot.getValue(Event.class);
+                    eventList.add(event);
+                }
+                eventAdapter.notifyDataSetChanged(); // Update adapter
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Toast.makeText(EventPage.this, "Failed to load events", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
 }

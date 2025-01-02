@@ -61,6 +61,7 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
         }
     }
 
+
     public interface OnEventClickListener {
         void onEventClick(Event event);
     }
