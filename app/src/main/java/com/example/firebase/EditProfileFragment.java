@@ -1,5 +1,6 @@
 package com.example.firebase;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -32,6 +33,7 @@ public class EditProfileFragment extends DialogFragment {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
+    String databaseURL = "https://umuniverse-1d81d-default-rtdb.asia-southeast1.firebasedatabase.app/";
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -76,6 +78,10 @@ public class EditProfileFragment extends DialogFragment {
         EditText bioEditText = view.findViewById(R.id.bioEditText);
         EditText facultyEditText = view.findViewById(R.id.facultyEditText);
         Button saveButton = view.findViewById(R.id.saveButton);
+        Button cancelButton = view.findViewById(R.id.cancelButton);
+
+        // Troubleshooting purposes.
+        System.out.println("It reached the onCreateView in the fragment");
 
         loadUserData(bioEditText, facultyEditText);
 
@@ -83,23 +89,35 @@ public class EditProfileFragment extends DialogFragment {
             String newBio = bioEditText.getText().toString();
             String newFaculty = facultyEditText.getText().toString();
             saveUserData(newBio, newFaculty);
+
+            if(getActivity() instanceof ProfilePage) {
+                ((ProfilePage) getActivity()).fetchData();
+            }
+
+
+            dismissFragment();
+        });
+
+        cancelButton.setOnClickListener(v -> {
+            System.out.println("The cancel button has been pressed");
+            dismissFragment();
         });
 
         return view;
     }
 
-    public void onStart() {
-        super.onStart();
-        if (getDialog() != null && getDialog().getWindow() != null) {
-            getDialog().getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-            getDialog().getWindow().setBackgroundDrawableResource(android.R.color.transparent); // Transparent background
+    public void dismissFragment() {
+        if(getActivity() instanceof ProfilePage) {
+            ((ProfilePage) getActivity()).onFragmentDismissed();
         }
+
+        dismiss();
     }
 
     private void loadUserData(EditText bioEditText, EditText facultyEditText) {
         String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
-        DatabaseReference userRef = FirebaseDatabase.getInstance().getReference("Users").child(userId);
+        DatabaseReference userRef = FirebaseDatabase.getInstance(databaseURL).getReference("Users").child(userId);
 
         userRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -126,7 +144,7 @@ public class EditProfileFragment extends DialogFragment {
     private void saveUserData(String newBio, String newFaculty) {
         String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
-        DatabaseReference userRef = FirebaseDatabase.getInstance().getReference("Users").child(userId);
+        DatabaseReference userRef = FirebaseDatabase.getInstance(databaseURL).getReference("Users").child(userId);
 
         userRef.child("bio").setValue(newBio);
         userRef.child("faculty").setValue(newFaculty).addOnCompleteListener(task -> {

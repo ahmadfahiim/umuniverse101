@@ -13,6 +13,7 @@ import android.widget.TextView;
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
@@ -35,6 +36,8 @@ public class ProfilePage extends AppCompatActivity {
 
     private TextView profileName, eventCount, personalBio, personalFaculty;
     private ImageView edit_icon;
+    private View blurBackground;
+    private CardView bioCard, facultyCard;
     private DatabaseReference userRef;
     private FirebaseAuth auth;
     String databaseURL = "https://umuniverse-1d81d-default-rtdb.asia-southeast1.firebasedatabase.app/";
@@ -49,7 +52,10 @@ public class ProfilePage extends AppCompatActivity {
         eventCount = findViewById(R.id.event_count);
         personalBio = findViewById(R.id.personal_bio);
         personalFaculty = findViewById(R.id.personal_faculty);
+        bioCard = findViewById(R.id.bioCard);
+        facultyCard = findViewById(R.id.facultyCard);
         edit_icon = findViewById(R.id.edit_icon);
+        blurBackground = findViewById(R.id.blur_background);
 
         auth = FirebaseAuth.getInstance();
 
@@ -67,6 +73,10 @@ public class ProfilePage extends AppCompatActivity {
         edit_icon.setOnClickListener(v -> {
             FrameLayout fragmentContainer = findViewById(R.id.fragment_container);
             fragmentContainer.setVisibility(View.VISIBLE);
+            blurBackground.setVisibility(View.VISIBLE);
+            bioCard.setVisibility(View.INVISIBLE);
+            facultyCard.setVisibility(View.INVISIBLE);
+
 
             FragmentManager fragmentManager = getSupportFragmentManager();
             FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
@@ -77,6 +87,8 @@ public class ProfilePage extends AppCompatActivity {
             fragmentTransaction.addToBackStack(null);
 
             fragmentTransaction.commit();
+
+            System.out.println("The edit profile fragment should be up.");
         });
 
 
@@ -106,7 +118,7 @@ public class ProfilePage extends AppCompatActivity {
 
     }
 
-    private void fetchData() {
+    public void fetchData() {
         userRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -136,5 +148,20 @@ public class ProfilePage extends AppCompatActivity {
 
             }
         });
+    }
+
+    public void onFragmentDismissed() {
+        System.out.println("This is the fragment dismiss in the profile activity.");
+        FrameLayout fragmentContainer = findViewById(R.id.fragment_container);
+        View blurBackground = findViewById(R.id.blur_background);
+        View bioCard = findViewById(R.id.bioCard);
+        View facultyCard = findViewById(R.id.facultyCard);
+
+        fragmentContainer.setVisibility(View.GONE);
+        blurBackground.setVisibility(View.GONE);
+        bioCard.setVisibility(View.VISIBLE);
+        facultyCard.setVisibility(View.VISIBLE);
+
+        System.out.println("The UI has been reset after fragment dismissal.");
     }
 }
