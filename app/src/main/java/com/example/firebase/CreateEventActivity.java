@@ -28,6 +28,7 @@ public class CreateEventActivity extends AppCompatActivity {
     private Button btnSubmitEvent, btnBack;
 
     private DatabaseReference databaseReference;
+    String databaseURL = "https://umuniverse-1d81d-default-rtdb.asia-southeast1.firebasedatabase.app/";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,7 +47,7 @@ public class CreateEventActivity extends AppCompatActivity {
         btnBack = findViewById(R.id.btnBack);
 
         // Initialize Firebase reference
-        databaseReference = FirebaseDatabase.getInstance().getReference("Events");
+        databaseReference = FirebaseDatabase.getInstance(databaseURL).getReference("Events");
 
         btnBack.setOnClickListener(v -> {
             Intent createEventIntent = new Intent(CreateEventActivity.this, EventPage.class);
@@ -110,6 +111,8 @@ public class CreateEventActivity extends AppCompatActivity {
         String eventEndTime = etEventEndTime.getText().toString().trim();
         String eventLocation = etEventLocation.getText().toString().trim();
         String eventCategory = spinnerCategory.getSelectedItem().toString();
+
+        System.out.println("running validateAndSubmitEvent...");
 
         // Simple validation
         if (eventName.isEmpty() || eventDate.isEmpty() || eventStartTime.isEmpty()

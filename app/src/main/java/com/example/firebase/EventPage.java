@@ -35,7 +35,7 @@ public class EventPage extends AppCompatActivity {
         setContentView(R.layout.event_page);
 
         // Initialize Firebase Database
-        databaseReference = FirebaseDatabase.getInstance().getReference("events");
+        databaseReference = FirebaseDatabase.getInstance(databaseURL).getReference("Events");
 
         // Initialize RecyclerView
         recyclerView = findViewById(R.id.recyclerView);
