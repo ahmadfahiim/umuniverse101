@@ -131,6 +131,10 @@ public class CreateEventActivity extends AppCompatActivity {
 
         // Push data to Firebase
         String eventId = databaseReference.push().getKey();
+        if (eventId == null) {
+            Toast.makeText(this, "Failed to generate Event ID", Toast.LENGTH_SHORT).show();
+            return;
+        }
         HashMap<String, Object> eventDetails = new HashMap<>();
         eventDetails.put("id", eventId);
         eventDetails.put("name", eventName);
