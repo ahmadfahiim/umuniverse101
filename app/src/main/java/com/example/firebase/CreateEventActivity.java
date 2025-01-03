@@ -37,11 +37,10 @@ public class CreateEventActivity extends AppCompatActivity {
     private static final int PICK_IMAGE_REQUEST = 1;
     private static final int REQUEST_PERMISSIONS = 100;
 
-    private EditText etEventName, etEventDate, etEventStartTime, etEventEndTime, etEventLocation;
+    private EditText etEventName, etEventDate, etEventStartTime, etEventEndTime, etEventLocation, etEventDescription;
     private Spinner spinnerCategory;
     private TextView tvLockdownMessage;
     private Button btnSubmitEvent, btnBack;
-    private Uri selectedImageUri;
     private DatabaseReference databaseReference;
     private EditText etEventPhotoUrl;
     String databaseURL = "https://umuniverse-1d81d-default-rtdb.asia-southeast1.firebasedatabase.app/";
@@ -57,6 +56,7 @@ public class CreateEventActivity extends AppCompatActivity {
         etEventStartTime = findViewById(R.id.etEventStartTime);
         etEventEndTime = findViewById(R.id.etEventEndTime);
         etEventLocation = findViewById(R.id.etEventLocation);
+        etEventDescription = findViewById(R.id.etEventDescription);
         spinnerCategory = findViewById(R.id.spinnerCategory);
         tvLockdownMessage = findViewById(R.id.tvLockdownMessage);
         etEventPhotoUrl = findViewById(R.id.etEventPhotoUrl);
@@ -124,21 +124,6 @@ public class CreateEventActivity extends AppCompatActivity {
         timePickerDialog.show();
     }
 
-//    @Override
-//    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-//        super.onActivityResult(requestCode, resultCode, data);
-//        if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null) {
-//            selectedImageUri = data.getData();
-//            Glide.with(this)
-//                    .load(selectedImageUri)
-//                    .into(ivEventPhoto);
-//        } else {
-//            Toast.makeText(this, "Failed to pick image. Please try again.", Toast.LENGTH_SHORT).show();
-//        }
-//    }
-
-
-
     private void validateAndSubmitEvent() {
         String eventName = etEventName.getText().toString();
         String eventDate = etEventDate.getText().toString();
@@ -147,12 +132,13 @@ public class CreateEventActivity extends AppCompatActivity {
         String eventLocation = etEventLocation.getText().toString();
         String eventCategory = spinnerCategory.getSelectedItem().toString();
         String eventPhotoUrl = etEventPhotoUrl.getText().toString();
+        String eventDescription = etEventDescription.getText().toString().trim();
 
         System.out.println("running validateAndSubmitEvent...");
 
         // Simple validation
         if (eventName.isEmpty() || eventDate.isEmpty() || eventStartTime.isEmpty()
-                || eventEndTime.isEmpty() || eventLocation.isEmpty() || eventPhotoUrl.isEmpty()) {
+                || eventEndTime.isEmpty() || eventLocation.isEmpty() || eventPhotoUrl.isEmpty() || eventDescription.isEmpty()) {
             Toast.makeText(this, "Please fill out all required fields", Toast.LENGTH_SHORT).show();
             return;
         }
@@ -179,7 +165,7 @@ public class CreateEventActivity extends AppCompatActivity {
         eventDetails.put("location", eventLocation);
         eventDetails.put("category", eventCategory);
         eventDetails.put("photoUrl", eventPhotoUrl);
-
+        eventDetails.put("description", eventDescription);
 
         assert eventId != null;
         databaseReference.child(eventId).setValue(eventDetails).addOnCompleteListener(task -> {

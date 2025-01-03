@@ -64,7 +64,8 @@ public class HomePage extends AppCompatActivity {
                 startActivity(new Intent(getApplicationContext(), EventPage.class));
                 return true;
             } else if (itemId == R.id.bookings) {
-                // Handle bookings
+                Intent eventsIntent = new Intent(getApplicationContext(), BookingPage.class);
+                startActivity(eventsIntent);
                 return true;
             } else if (itemId == R.id.profile) {
                 startActivity(new Intent(getApplicationContext(), ProfilePage.class));

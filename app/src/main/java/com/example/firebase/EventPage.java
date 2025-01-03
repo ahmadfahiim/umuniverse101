@@ -72,7 +72,8 @@ public class EventPage extends AppCompatActivity {
             } else if (itemId == R.id.events) {
                 return true;
             } else if (itemId == R.id.bookings) {
-                Toast.makeText(this, "Bookings Feature Coming Soon!", Toast.LENGTH_SHORT).show();
+                Intent eventsIntent = new Intent(getApplicationContext(), BookingPage.class);
+                startActivity(eventsIntent);
                 return true;
             } else if (itemId == R.id.profile) {
                 Intent profileIntent = new Intent(getApplicationContext(), ProfilePage.class);

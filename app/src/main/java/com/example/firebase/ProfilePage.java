@@ -106,7 +106,9 @@ public class ProfilePage extends AppCompatActivity {
                 Intent eventsIntent = new Intent(getApplicationContext(), EventPage.class);
                 startActivity(eventsIntent);
                 return true;
-            } else if (itemId == R.id.bookings) {// To do
+            } else if (itemId == R.id.bookings) {
+                Intent eventsIntent = new Intent(getApplicationContext(), BookingPage.class);
+                startActivity(eventsIntent);
                 return true;
             } else if (itemId == R.id.profile) {
                 return true;

@@ -38,6 +38,7 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
         holder.startTime.setText(event.getStartTime());
         holder.endTime.setText(event.getEndTime());
         holder.category.setText(event.getCategory());
+        holder.description.setText(event.getDescription());
 
         if (event.getPhotoUrl() != null && !event.getPhotoUrl().isEmpty()) {
             Glide.with(holder.itemView.getContext())
@@ -57,7 +58,7 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
     }
 
     public static class EventViewHolder extends RecyclerView.ViewHolder {
-        TextView title, location, date, startTime, endTime, category;
+        TextView title, location, date, startTime, endTime, category, description;
         ImageView photo;
 
         public EventViewHolder(@NonNull View itemView) {
@@ -69,6 +70,7 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
             endTime = itemView.findViewById(R.id.eventEndTime);
             category = itemView.findViewById(R.id.eventCategory);
             photo = itemView.findViewById(R.id.eventPhoto);
+            description = itemView.findViewById(R.id.eventDescription);
         }
     }
 
