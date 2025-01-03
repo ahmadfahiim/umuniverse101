@@ -15,7 +15,7 @@
 
         <!-- Event Image -->
         <ImageView
-            android:id="@+id/eventImage"
+            android:id="@+id/eventPhoto"
             android:layout_width="match_parent"
             android:layout_height="150dp"
             android:scaleType="centerCrop" />

@@ -29,6 +29,22 @@
             android:padding="12dp"
             android:textColor="#000000" />
 
+        <!-- Event Photo -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Event Photo*"
+            android:textSize="16sp"
+            android:layout_marginBottom="4dp"
+            android:textColor="#000000" />
+
+        <EditText
+            android:id="@+id/etEventPhotoUrl"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Enter Image URL"
+            android:inputType="textUri" />
+
         <!-- Event Date -->
         <TextView
             android:layout_width="match_parent"

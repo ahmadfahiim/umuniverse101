@@ -8,12 +8,13 @@ public class Event {
     private String endTime;
     private String location;
     private String category;
+    private String photoUrl;;
 
     // Default constructor required for Firebase
     public Event() {}
 
     // Parameterized constructor
-    public Event(String id, String name, String date, String startTime, String endTime, String location, String category) {
+    public Event(String id, String name, String date, String startTime, String endTime, String location, String category, String photoUrl) {
         this.id = id;
         this.name = name;
         this.date = date;
@@ -21,6 +22,7 @@ public class Event {
         this.endTime = endTime;
         this.location = location;
         this.category = category;
+        this.photoUrl = photoUrl;
     }
 
     // Getters
@@ -79,5 +81,22 @@ public class Event {
 
     public void setCategory(String category) {
         this.category = category;
+    }
+
+    private String imageUrl;
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
+    public String getPhotoUrl() {
+        return photoUrl;
+    }
+
+    public void setPhotoUrl(String photoUrl) {
+        this.photoUrl = photoUrl;
     }
 }

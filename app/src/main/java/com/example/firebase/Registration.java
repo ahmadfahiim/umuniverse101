@@ -75,6 +75,9 @@ public class Registration extends AppCompatActivity {
                 }
 
                 registerUser(username, email, password);
+
+                Intent intent = new Intent(getApplicationContext(), Login.class);
+                startActivity(intent);
             }
         });
 

@@ -3,31 +3,47 @@ package com.example.firebase;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
+import com.bumptech.glide.Glide;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import java.util.Calendar;
 import java.util.HashMap;
+import android.Manifest;
+
 
 public class CreateEventActivity extends AppCompatActivity {
+
+    private static final int PICK_IMAGE_REQUEST = 1;
+    private static final int REQUEST_PERMISSIONS = 100;
 
     private EditText etEventName, etEventDate, etEventStartTime, etEventEndTime, etEventLocation;
     private Spinner spinnerCategory;
     private TextView tvLockdownMessage;
     private Button btnSubmitEvent, btnBack;
+    private Uri selectedImageUri;
     private DatabaseReference databaseReference;
+    private EditText etEventPhotoUrl;
     String databaseURL = "https://umuniverse-1d81d-default-rtdb.asia-southeast1.firebasedatabase.app/";
 
     @Override
@@ -43,6 +59,7 @@ public class CreateEventActivity extends AppCompatActivity {
         etEventLocation = findViewById(R.id.etEventLocation);
         spinnerCategory = findViewById(R.id.spinnerCategory);
         tvLockdownMessage = findViewById(R.id.tvLockdownMessage);
+        etEventPhotoUrl = findViewById(R.id.etEventPhotoUrl);
         btnSubmitEvent = findViewById(R.id.btnSubmitEvent);
         btnBack = findViewById(R.id.btnBack);
 
@@ -80,7 +97,6 @@ public class CreateEventActivity extends AppCompatActivity {
             startActivity(createEventIntent);
         });
     }
-
     private void showDatePicker() {
         Calendar calendar = Calendar.getInstance();
         int year = calendar.get(Calendar.YEAR);
@@ -108,6 +124,21 @@ public class CreateEventActivity extends AppCompatActivity {
         timePickerDialog.show();
     }
 
+//    @Override
+//    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+//        super.onActivityResult(requestCode, resultCode, data);
+//        if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null) {
+//            selectedImageUri = data.getData();
+//            Glide.with(this)
+//                    .load(selectedImageUri)
+//                    .into(ivEventPhoto);
+//        } else {
+//            Toast.makeText(this, "Failed to pick image. Please try again.", Toast.LENGTH_SHORT).show();
+//        }
+//    }
+
+
+
     private void validateAndSubmitEvent() {
         String eventName = etEventName.getText().toString();
         String eventDate = etEventDate.getText().toString();
@@ -115,17 +146,17 @@ public class CreateEventActivity extends AppCompatActivity {
         String eventEndTime = etEventEndTime.getText().toString();
         String eventLocation = etEventLocation.getText().toString();
         String eventCategory = spinnerCategory.getSelectedItem().toString();
+        String eventPhotoUrl = etEventPhotoUrl.getText().toString();
 
         System.out.println("running validateAndSubmitEvent...");
 
         // Simple validation
         if (eventName.isEmpty() || eventDate.isEmpty() || eventStartTime.isEmpty()
-                || eventEndTime.isEmpty() || eventLocation.isEmpty()) {
+                || eventEndTime.isEmpty() || eventLocation.isEmpty() || eventPhotoUrl.isEmpty()) {
             Toast.makeText(this, "Please fill out all required fields", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        // Check if the location is in lockdown (mock check)
         if (eventLocation.contains("lockdown")) {
             tvLockdownMessage.setVisibility(View.VISIBLE);
             return;
@@ -147,7 +178,7 @@ public class CreateEventActivity extends AppCompatActivity {
         eventDetails.put("endTime", eventEndTime);
         eventDetails.put("location", eventLocation);
         eventDetails.put("category", eventCategory);
-
+        eventDetails.put("photoUrl", eventPhotoUrl);
 
 
         assert eventId != null;
@@ -159,5 +190,7 @@ public class CreateEventActivity extends AppCompatActivity {
                 Toast.makeText(this, "Failed to create event. Try again!", Toast.LENGTH_SHORT).show();
             }
         });
+
     }
+
 }

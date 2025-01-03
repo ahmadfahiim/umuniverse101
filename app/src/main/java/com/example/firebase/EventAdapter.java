@@ -10,6 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
+import com.bumptech.glide.Glide;
 
 public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHolder> {
 
@@ -38,6 +39,14 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
         holder.endTime.setText(event.getEndTime());
         holder.category.setText(event.getCategory());
 
+        if (event.getPhotoUrl() != null && !event.getPhotoUrl().isEmpty()) {
+            Glide.with(holder.itemView.getContext())
+                    .load(event.getPhotoUrl())
+                    .into(holder.photo);
+        } else {
+            holder.photo.setImageResource(R.drawable.edit_pen); // Set a placeholder if no image is available
+        }
+
         // Handle click events
         holder.itemView.setOnClickListener(v -> listener.onEventClick(event));
     }
@@ -49,6 +58,7 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
 
     public static class EventViewHolder extends RecyclerView.ViewHolder {
         TextView title, location, date, startTime, endTime, category;
+        ImageView photo;
 
         public EventViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -58,6 +68,7 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
             startTime = itemView.findViewById(R.id.eventStartTime);
             endTime = itemView.findViewById(R.id.eventEndTime);
             category = itemView.findViewById(R.id.eventCategory);
+            photo = itemView.findViewById(R.id.eventPhoto);
         }
     }
 
