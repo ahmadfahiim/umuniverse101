@@ -4,6 +4,7 @@ import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -26,7 +27,6 @@ public class CreateEventActivity extends AppCompatActivity {
     private Spinner spinnerCategory;
     private TextView tvLockdownMessage;
     private Button btnSubmitEvent, btnBack;
-
     private DatabaseReference databaseReference;
     String databaseURL = "https://umuniverse-1d81d-default-rtdb.asia-southeast1.firebasedatabase.app/";
 
@@ -49,6 +49,10 @@ public class CreateEventActivity extends AppCompatActivity {
         // Initialize Firebase reference
         databaseReference = FirebaseDatabase.getInstance(databaseURL).getReference("Events");
 
+        Log.d("FirebaseDebug", "Database Reference Initialized: " + databaseReference.toString());
+
+        System.out.println("Why doesnt this work????");
+
         btnBack.setOnClickListener(v -> {
             Intent createEventIntent = new Intent(CreateEventActivity.this, EventPage.class);
             startActivity(createEventIntent);
@@ -70,8 +74,8 @@ public class CreateEventActivity extends AppCompatActivity {
         etEventEndTime.setOnClickListener(v -> showTimePicker(etEventEndTime));
 
         // Submit button click listener
-        btnSubmitEvent.setOnClickListener(v -> validateAndSubmitEvent());
         btnSubmitEvent.setOnClickListener(v -> {
+            validateAndSubmitEvent();
             Intent createEventIntent = new Intent(CreateEventActivity.this, EventPage.class);
             startActivity(createEventIntent);
         });
@@ -105,11 +109,11 @@ public class CreateEventActivity extends AppCompatActivity {
     }
 
     private void validateAndSubmitEvent() {
-        String eventName = etEventName.getText().toString().trim();
-        String eventDate = etEventDate.getText().toString().trim();
-        String eventStartTime = etEventStartTime.getText().toString().trim();
-        String eventEndTime = etEventEndTime.getText().toString().trim();
-        String eventLocation = etEventLocation.getText().toString().trim();
+        String eventName = etEventName.getText().toString();
+        String eventDate = etEventDate.getText().toString();
+        String eventStartTime = etEventStartTime.getText().toString();
+        String eventEndTime = etEventEndTime.getText().toString();
+        String eventLocation = etEventLocation.getText().toString();
         String eventCategory = spinnerCategory.getSelectedItem().toString();
 
         System.out.println("running validateAndSubmitEvent...");
@@ -143,6 +147,8 @@ public class CreateEventActivity extends AppCompatActivity {
         eventDetails.put("endTime", eventEndTime);
         eventDetails.put("location", eventLocation);
         eventDetails.put("category", eventCategory);
+
+
 
         assert eventId != null;
         databaseReference.child(eventId).setValue(eventDetails).addOnCompleteListener(task -> {

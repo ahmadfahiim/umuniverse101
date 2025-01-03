@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.*;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
@@ -27,7 +28,7 @@ public class EventPage extends AppCompatActivity {
     private ImageView createEventButton;
     private DatabaseReference databaseReference;
 
-    String databaseURL = "https://umuniverse-1d81d-default-rtdb.asia-southeast1.firebasedatabase.app/";
+    public String databaseURL = "https://umuniverse-1d81d-default-rtdb.asia-southeast1.firebasedatabase.app/";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,6 +38,8 @@ public class EventPage extends AppCompatActivity {
         // Initialize Firebase Database
         databaseReference = FirebaseDatabase.getInstance(databaseURL).getReference("Events");
 
+        System.out.println("onCreate for eventPage active.");
+
         // Initialize RecyclerView
         recyclerView = findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -44,7 +47,7 @@ public class EventPage extends AppCompatActivity {
         eventList = new ArrayList<>();
         eventAdapter = new EventAdapter(eventList, event -> {
             // Handle Clicks on Events
-            Toast.makeText(this, "Clicked: " + event.getTitle(), Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Clicked: " + event.getName(), Toast.LENGTH_SHORT).show();
         });
         recyclerView.setAdapter(eventAdapter);
 

@@ -31,13 +31,14 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
     @Override
     public void onBindViewHolder(@NonNull EventViewHolder holder, int position) {
         Event event = eventList.get(position);
-        holder.title.setText(event.getTitle());
+        holder.title.setText(event.getName());
         holder.location.setText(event.getLocation());
-        holder.distance.setText(event.getDistance());
         holder.date.setText(event.getDate());
-        holder.imageView.setImageResource(event.getImageResId());
-        holder.vaccinatedOnly.setVisibility(event.isVaccinatedOnly() ? View.VISIBLE : View.GONE);
+        holder.startTime.setText(event.getStartTime());
+        holder.endTime.setText(event.getEndTime());
+        holder.category.setText(event.getCategory());
 
+        // Handle click events
         holder.itemView.setOnClickListener(v -> listener.onEventClick(event));
     }
 
@@ -47,20 +48,18 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
     }
 
     public static class EventViewHolder extends RecyclerView.ViewHolder {
-        TextView title, location, distance, date;
-        ImageView imageView, vaccinatedOnly;
+        TextView title, location, date, startTime, endTime, category;
 
         public EventViewHolder(@NonNull View itemView) {
             super(itemView);
             title = itemView.findViewById(R.id.eventTitle);
             location = itemView.findViewById(R.id.eventLocation);
-            distance = itemView.findViewById(R.id.eventDistance);
             date = itemView.findViewById(R.id.eventDate);
-            imageView = itemView.findViewById(R.id.eventImage);
-            vaccinatedOnly = itemView.findViewById(R.id.vaccinatedOnlyIcon);
+            startTime = itemView.findViewById(R.id.eventStartTime);
+            endTime = itemView.findViewById(R.id.eventEndTime);
+            category = itemView.findViewById(R.id.eventCategory);
         }
     }
-
 
     public interface OnEventClickListener {
         void onEventClick(Event event);

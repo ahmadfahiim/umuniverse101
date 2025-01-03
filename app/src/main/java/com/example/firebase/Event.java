@@ -1,44 +1,83 @@
 package com.example.firebase;
 
 public class Event {
-    private String title;
-    private String location;
-    private String distance;
+    private String id;
+    private String name;
     private String date;
-    private int imageResId;
-    private boolean vaccinatedOnly;
+    private String startTime;
+    private String endTime;
+    private String location;
+    private String category;
 
-    public Event(String title, String location, String distance, String date, int imageResId, boolean vaccinatedOnly) {
-        this.title = title;
-        this.location = location;
-        this.distance = distance;
+    // Default constructor required for Firebase
+    public Event() {}
+
+    // Parameterized constructor
+    public Event(String id, String name, String date, String startTime, String endTime, String location, String category) {
+        this.id = id;
+        this.name = name;
         this.date = date;
-        this.imageResId = imageResId;
-        this.vaccinatedOnly = vaccinatedOnly;
+        this.startTime = startTime;
+        this.endTime = endTime;
+        this.location = location;
+        this.category = category;
     }
 
     // Getters
-    public String getTitle() {
-        return title;
+    public String getId() {
+        return id;
     }
 
-    public String getLocation() {
-        return location;
-    }
-
-    public String getDistance() {
-        return distance;
+    public String getName() {
+        return name;
     }
 
     public String getDate() {
         return date;
     }
 
-    public int getImageResId() {
-        return imageResId;
+    public String getStartTime() {
+        return startTime;
     }
 
-    public boolean isVaccinatedOnly() {
-        return vaccinatedOnly;
+    public String getEndTime() {
+        return endTime;
+    }
+
+    public String getLocation() {
+        return location;
+    }
+
+    public String getCategory() {
+        return category;
+    }
+
+    // Setters (required for Firebase deserialization)
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
+    }
+
+    public void setStartTime(String startTime) {
+        this.startTime = startTime;
+    }
+
+    public void setEndTime(String endTime) {
+        this.endTime = endTime;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
     }
 }
