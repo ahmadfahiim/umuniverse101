@@ -11,6 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.bumptech.glide.Glide;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -21,8 +22,9 @@ public class EventDescriptionPage extends AppCompatActivity {
 
     private TextView nameTextView, dateTextView, venueTextView, startTimeTextView, endTimeTextView, categoryTextView, descriptionTextView;
     private ImageView eventImageView;
-    private Button joinEventButton ;
+    private Button joinEventButton, btnBack;
     private DatabaseReference eventRef;
+    String databaseURL = "https://umuniverse-1d81d-default-rtdb.asia-southeast1.firebasedatabase.app/";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,6 +41,7 @@ public class EventDescriptionPage extends AppCompatActivity {
         descriptionTextView = findViewById(R.id.eventDescriptionTextView);
         eventImageView = findViewById(R.id.eventImageView);
         joinEventButton = findViewById(R.id.joinEventButton);
+        btnBack = findViewById(R.id.btnBack);
 
         // Get event ID from the intent
         String eventId = getIntent().getStringExtra("eventId");
@@ -51,16 +54,25 @@ public class EventDescriptionPage extends AppCompatActivity {
         }
 
         // Initialize Firebase Database reference
-        eventRef = FirebaseDatabase.getInstance().getReference("events").child(eventId);
+        eventRef = FirebaseDatabase.getInstance(databaseURL).getReference("Events").child(eventId);
 
         // Fetch event details from Firebase Realtime Database
         fetchEventDetails();
 
         // Handle Join Event button click
         joinEventButton.setOnClickListener(v -> {
-            Intent eventPageIntent = new Intent(EventDescriptionPage.this, EventPage.class);
-            eventPageIntent.putExtra("eventId", eventId); // Pass the event ID if needed
-            startActivity(eventPageIntent);
+            String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+            if (userId != null) {
+                joinEvent(userId, eventId);
+            } else {
+                Toast.makeText(EventDescriptionPage.this, "Please log in to join the event.", Toast.LENGTH_SHORT).show();
+            }
+
+        });
+
+        btnBack.setOnClickListener(v -> {
+            Intent eventsIntent = new Intent(getApplicationContext(), EventPage.class);
+            startActivity(eventsIntent);
         });
     }
 
@@ -104,6 +116,28 @@ public class EventDescriptionPage extends AppCompatActivity {
             public void onCancelled(@NonNull DatabaseError error) {
                 Toast.makeText(EventDescriptionPage.this, "Failed to load event details", Toast.LENGTH_SHORT).show();
                 finish();
+            }
+        });
+    }
+
+    private void joinEvent(String userId, String eventId) {
+        DatabaseReference databaseRef = FirebaseDatabase.getInstance(databaseURL).getReference();
+
+        // Update the "joinedUsers" under the specific event
+        DatabaseReference eventJoinedUsersRef = databaseRef.child("Events").child(eventId).child("joinedUsers").child(userId);
+        eventJoinedUsersRef.setValue(true).addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                // Update the "joinedEvents" under the specific user
+                DatabaseReference userJoinedEventsRef = databaseRef.child("Users").child(userId).child("joinedEvents").child(eventId);
+                userJoinedEventsRef.setValue(true).addOnCompleteListener(userTask -> {
+                    if (userTask.isSuccessful()) {
+                        Toast.makeText(EventDescriptionPage.this, "Successfully joined the event!", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(EventDescriptionPage.this, "Failed to update user's joined events. Try again.", Toast.LENGTH_SHORT).show();
+                    }
+                });
+            } else {
+                Toast.makeText(EventDescriptionPage.this, "Failed to update event's joined users. Try again.", Toast.LENGTH_SHORT).show();
             }
         });
     }

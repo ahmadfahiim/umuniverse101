@@ -1,96 +1,326 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:fillViewport="true"
+    android:background="#FFFFFF">
+
 
     <LinearLayout
         android:orientation="vertical"
-        android:padding="16dp"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:padding="16dp">
 
-        <!-- Event Image -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Event Details Page"
+            android:textSize="24sp"
+            android:textColor="@color/black"
+            android:textStyle="bold"
+            android:layout_marginBottom="22dp"/>
+
+        <!-- Image Section -->
         <ImageView
             android:id="@+id/eventImageView"
             android:layout_width="match_parent"
             android:layout_height="200dp"
-            android:scaleType="centerCrop"
-            android:contentDescription="Event Image" />
+            android:scaleType="centerCrop" />
 
-        <!-- Event Name -->
-        <TextView
-            android:id="@+id/eventNameTextView"
+        <!-- Title and Rating Section -->
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Event Name"
-            android:textSize="24sp"
-            android:textStyle="bold"
-            android:layout_marginTop="8dp" />
+            android:orientation="vertical"
+            android:paddingTop="8dp" >
 
-        <!-- Event Date -->
-        <TextView
-            android:id="@+id/eventDateTextView"
+            <TextView
+                android:id="@+id/eventNameTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Tennis Practice"
+                android:textSize="22sp"
+                android:textStyle="bold"
+                android:textColor="#000000" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Category: "
+                    android:textColor="@color/black"
+                    android:textSize="17sp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/eventCategoryTextView"
+                    android:text="Sports"
+                    android:textColor="@color/black"
+                    android:textSize="17sp" />
+
+
+
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Details"
+                android:textSize="16sp"
+                android:layout_marginTop="3dp"/>
+
+        </LinearLayout>
+
+        <!-- Owner and Venue Section -->
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Event Date"
-            android:layout_marginTop="4dp" />
+            android:orientation="vertical"
+            android:layout_marginTop="16dp">
 
-        <!-- Event Venue -->
-        <TextView
-            android:id="@+id/eventVenueTextView"
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical">
+
+                <ImageView
+                    android:id="@+id/ivOwnerIcon"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:src="@drawable/logo" />
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginStart="8dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Owner: "
+                        android:textColor="@color/black"
+                        android:textSize="17sp"
+                        android:textStyle="bold"/>
+
+                    <TextView
+                        android:id="@+id/ownerTextView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Jack Hoffman"
+                        android:textSize="17sp"
+                        android:textColor="#000000" />
+
+
+
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:paddingTop="8dp">
+
+                <ImageView
+                    android:id="@+id/ivVenueIcon"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:src="@drawable/map_marker" />
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginStart="8dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Venue: "
+                        android:textColor="@color/black"
+                        android:textSize="17sp"
+                        android:textStyle="bold"/>
+
+                    <TextView
+                        android:id="@+id/eventVenueTextView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Test Location"
+                        android:textColor="@color/black"
+                        android:textSize="17sp" />
+
+
+                </LinearLayout>
+
+            </LinearLayout>
+        </LinearLayout>
+
+        <!-- Date, Time, and Price Section -->
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Event Venue"
-            android:layout_marginTop="4dp" />
+            android:orientation="horizontal"
+            android:paddingTop="8dp">
 
-        <!-- Event Start Time -->
-        <TextView
-            android:id="@+id/eventStartTimeTextView"
+            <ImageView
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:src="@drawable/clock"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="9dp"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Date: "
+                        android:textColor="@color/black"
+                        android:textSize="17sp"
+                        android:textStyle="bold"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/eventDateTextView"
+                        android:text="19-11-2025"
+                        android:textColor="@color/black"
+                        android:textSize="17sp" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Time: "
+                        android:textColor="@color/black"
+                        android:textSize="17sp"
+                        android:textStyle="bold"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/eventStartTimeTextView"
+                        android:text="19:00"
+                        android:textColor="@color/black"
+                        android:textSize="17sp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text=" - "
+                        android:textColor="@color/black"
+                        android:textSize="17sp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/eventEndTimeTextView"
+                        android:text="21:00"
+                        android:textSize="17sp"
+                        android:textColor="@color/black" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <!-- Contact Section -->
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Start Time"
-            android:layout_marginTop="4dp" />
+            android:orientation="horizontal"
+            android:paddingTop="10dp">
 
-        <!-- Event End Time -->
+            <ImageView
+                android:id="@+id/ivContactIcon"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:src="@drawable/email"
+                android:paddingBottom="4dp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="9dp"
+                android:text="Contact: "
+                android:textSize="17sp"
+                android:textColor="#000000"
+                android:textStyle="bold"/>
+
+            <TextView
+                android:id="@+id/ownerEmailTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="willybenningson@gmail.com"
+                android:textSize="17sp"
+                android:textColor="#000000" />
+
+        </LinearLayout>
+
+        <!-- About Section -->
+
         <TextView
-            android:id="@+id/eventEndTimeTextView"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="End Time"
-            android:layout_marginTop="4dp" />
-
-        <!-- Event Category -->
-        <TextView
-            android:id="@+id/eventCategoryTextView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Category"
-            android:layout_marginTop="4dp" />
-
-        <!-- Event Description -->
+            android:text="Event Description"
+            android:layout_marginTop="10dp"
+            android:textColor="@color/black"
+            android:textSize="21sp"
+            android:textStyle="bold"/>
         <TextView
             android:id="@+id/eventDescriptionTextView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Description"
-            android:layout_marginTop="8dp" />
+            android:paddingTop="12dp"
+            android:text="this is a very long piece of text that i wanna use to find out if the description successfully wraps around the"
+            android:textSize="15sp"
+            android:textColor="#000000"
+            android:maxLines="8"
+            android:lineSpacingExtra="4dp"/>
 
         <!-- Join Event Button -->
         <Button
             android:id="@+id/joinEventButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Join Event"
-            android:layout_marginTop="16dp" />
+            android:layout_marginTop="24dp"
+            android:backgroundTint="#00FF00"
+            android:text="JOIN EVENT"
+            android:textColor="#FFFFFF"
+            android:textSize="16sp" />
 
         <Button
             android:id="@+id/btnBack"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:text="Back"
-            android:backgroundTint="?attr/colorPrimary" />
+            android:layout_marginTop="8dp"
+            android:backgroundTint="#FF0000"
+            android:text="CANCEL"
+            android:textColor="#FFFFFF"
+            android:textSize="16sp" />
 
     </LinearLayout>
-
 </ScrollView>
