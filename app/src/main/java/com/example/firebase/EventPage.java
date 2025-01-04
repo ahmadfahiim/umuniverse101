@@ -27,6 +27,7 @@ public class EventPage extends AppCompatActivity {
     private List<Event> eventList;
     private ImageView createEventButton;
     private DatabaseReference databaseReference;
+    private Event event;
 
     public String databaseURL = "https://umuniverse-1d81d-default-rtdb.asia-southeast1.firebasedatabase.app/";
 
@@ -34,6 +35,8 @@ public class EventPage extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.event_page);
+
+
 
         // Initialize Firebase Database
         databaseReference = FirebaseDatabase.getInstance(databaseURL).getReference("Events");
@@ -46,18 +49,22 @@ public class EventPage extends AppCompatActivity {
 
         eventList = new ArrayList<>();
         eventAdapter = new EventAdapter(eventList, event -> {
-            // Handle Clicks on Events
-            Toast.makeText(this, "Clicked: " + event.getName(), Toast.LENGTH_SHORT).show();
+            // Open EventDescriptionPage and pass the event ID
+            Intent intent = new Intent(this, EventDescriptionPage.class);
+            intent.putExtra("eventId", event.getId()); // Assuming Event has a getId() method
+            startActivity(intent);
         });
         recyclerView.setAdapter(eventAdapter);
+
 
         // Fetch Events from Firebase
         fetchEventsFromFirebase();
 
         createEventButton = findViewById(R.id.createEvent);
         createEventButton.setOnClickListener(v -> {
-            Intent createEventIntent = new Intent(EventPage.this, CreateEventActivity.class);
-            startActivity(createEventIntent);
+            Intent intent = new Intent(EventPage.this, EventDescriptionPage.class);
+            intent.putExtra("eventId", event.getId()); // Ensure event.getId() returns a valid ID.
+            startActivity(intent);
         });
 
         // Initialize Bottom Navigation
