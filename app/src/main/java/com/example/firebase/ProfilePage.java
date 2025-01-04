@@ -1,25 +1,19 @@
 package com.example.firebase;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.cardview.widget.CardView;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.bumptech.glide.Glide;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -28,16 +22,12 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import com.google.android.material.bottomnavigation.BottomNavigationView;
-
-import java.net.URL;
-
 public class ProfilePage extends AppCompatActivity {
 
     private TextView profileName, eventCount, personalBio, personalFaculty;
-    private ImageView edit_icon;
+    private ImageView edit_icon, profileImage;
     private View blurBackground;
-    private CardView bioCard, facultyCard;
+    private FrameLayout bioCard, facultyCard;
     private DatabaseReference userRef;
     private FirebaseAuth auth;
     String databaseURL = "https://umuniverse-1d81d-default-rtdb.asia-southeast1.firebasedatabase.app/";
@@ -55,18 +45,15 @@ public class ProfilePage extends AppCompatActivity {
         facultyCard = findViewById(R.id.facultyCard);
         edit_icon = findViewById(R.id.edit_icon);
         blurBackground = findViewById(R.id.blur_background);
+        profileImage = findViewById(R.id.profile_picture); // New ImageView for profile picture
 
         auth = FirebaseAuth.getInstance();
 
-        // Get current user
         FirebaseUser user = auth.getCurrentUser();
         if (user != null) {
-            String userId = user.getUid(); // Get dynamically assigned userId
+            String userId = user.getUid();
             userRef = FirebaseDatabase.getInstance(databaseURL).getReference("Users").child(userId);
-            System.out.println("The logged in user for the profile page is: " + userId);
             fetchData();
-        } else {
-            System.err.println("How the fuck did we reach here? This shouldn't be possible.");
         }
 
         edit_icon.setOnClickListener(v -> {
@@ -76,22 +63,14 @@ public class ProfilePage extends AppCompatActivity {
             bioCard.setVisibility(View.INVISIBLE);
             facultyCard.setVisibility(View.INVISIBLE);
 
-
             FragmentManager fragmentManager = getSupportFragmentManager();
             FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 
             EditProfileFragment editProfileFragment = new EditProfileFragment();
             fragmentTransaction.replace(R.id.fragment_container, editProfileFragment);
-
             fragmentTransaction.addToBackStack(null);
-
             fragmentTransaction.commit();
-
-            System.out.println("The edit profile fragment should be up.");
         });
-
-
-
 
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottomNavigationBar);
         bottomNavigationView.setSelectedItemId(R.id.profile);
@@ -99,24 +78,19 @@ public class ProfilePage extends AppCompatActivity {
         bottomNavigationView.setOnItemSelectedListener(item -> {
             int itemId = item.getItemId();
             if (itemId == R.id.home) {
-                Intent homeIntent = new Intent(getApplicationContext(), HomePage.class);
-                startActivity(homeIntent);
+                startActivity(new Intent(getApplicationContext(), HomePage.class));
                 return true;
             } else if (itemId == R.id.events) {
-                Intent eventsIntent = new Intent(getApplicationContext(), EventPage.class);
-                startActivity(eventsIntent);
+                startActivity(new Intent(getApplicationContext(), EventPage.class));
                 return true;
             } else if (itemId == R.id.bookings) {
-                Intent eventsIntent = new Intent(getApplicationContext(), BookingPage.class);
-                startActivity(eventsIntent);
+                startActivity(new Intent(getApplicationContext(), BookingPage.class));
                 return true;
             } else if (itemId == R.id.profile) {
                 return true;
             }
             return false;
-
         });
-
     }
 
     public void fetchData() {
@@ -128,31 +102,34 @@ public class ProfilePage extends AppCompatActivity {
                     Long eventsJoinedLong = snapshot.child("eventsJoined").getValue(Long.class);
                     String bio = snapshot.child("bio").getValue(String.class);
                     String faculty = snapshot.child("faculty").getValue(String.class);
+                    String profilePicUrl = snapshot.child("profilePictureUrl").getValue(String.class);
                     String eventsJoined = eventsJoinedLong != null ? String.valueOf(eventsJoinedLong) : "0";
-
-                    System.out.println(name + bio);
 
                     profileName.setText(name);
                     eventCount.setText(eventsJoined);
                     personalBio.setText(bio);
                     personalFaculty.setText(faculty);
 
-                    // Find a way to get the image from the database and load it.
+                    // Load profile picture using Glide if the URL is valid
+                    if (profilePicUrl != null && !profilePicUrl.isEmpty()) {
+                        Glide.with(ProfilePage.this)
+                                .load(profilePicUrl)
+                                .placeholder(R.drawable.logo) // Optional: default image
+                                .into(profileImage);
+                    }
                 } else {
-                    System.err.println("Something went wrong when fetching data for profile.");
+                    System.err.println("User data not found.");
                 }
-
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-
+                System.err.println("Error fetching data: " + error.getMessage());
             }
         });
     }
 
     public void onFragmentDismissed() {
-        System.out.println("This is the fragment dismiss in the profile activity.");
         FrameLayout fragmentContainer = findViewById(R.id.fragment_container);
         View blurBackground = findViewById(R.id.blur_background);
         View bioCard = findViewById(R.id.bioCard);
@@ -163,6 +140,7 @@ public class ProfilePage extends AppCompatActivity {
         bioCard.setVisibility(View.VISIBLE);
         facultyCard.setVisibility(View.VISIBLE);
 
-        System.out.println("The UI has been reset after fragment dismissal.");
+        // Refresh data after editing profile
+        fetchData();
     }
 }

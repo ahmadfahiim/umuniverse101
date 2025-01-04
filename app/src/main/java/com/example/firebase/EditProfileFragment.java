@@ -77,18 +77,20 @@ public class EditProfileFragment extends DialogFragment {
 
         EditText bioEditText = view.findViewById(R.id.bioEditText);
         EditText facultyEditText = view.findViewById(R.id.facultyEditText);
+        EditText profilePicUrlEditText = view.findViewById(R.id.profilePicUrlEditText);
         Button saveButton = view.findViewById(R.id.saveButton);
         Button cancelButton = view.findViewById(R.id.cancelButton);
 
         // Troubleshooting purposes.
         System.out.println("It reached the onCreateView in the fragment");
 
-        loadUserData(bioEditText, facultyEditText);
+        loadUserData(bioEditText, facultyEditText, profilePicUrlEditText);
 
         saveButton.setOnClickListener(v -> {
             String newBio = bioEditText.getText().toString();
             String newFaculty = facultyEditText.getText().toString();
-            saveUserData(newBio, newFaculty);
+            String profilePicUrl = profilePicUrlEditText.getText().toString();
+            saveUserData(newBio, newFaculty, profilePicUrl);
 
             if(getActivity() instanceof ProfilePage) {
                 ((ProfilePage) getActivity()).fetchData();
@@ -114,7 +116,7 @@ public class EditProfileFragment extends DialogFragment {
         dismiss();
     }
 
-    private void loadUserData(EditText bioEditText, EditText facultyEditText) {
+    private void loadUserData(EditText bioEditText, EditText facultyEditText, EditText profilePicUrlEditText) {
         String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
         DatabaseReference userRef = FirebaseDatabase.getInstance(databaseURL).getReference("Users").child(userId);
@@ -125,9 +127,11 @@ public class EditProfileFragment extends DialogFragment {
                 if (snapshot.exists()) {
                     String bio = snapshot.child("bio").getValue(String.class);
                     String faculty = snapshot.child("faculty").getValue(String.class);
+                    String profilePicUrl = snapshot.child("profilePictureUrl").getValue(String.class);
 
                     bioEditText.setText(bio != null ? bio : "");
                     facultyEditText.setText(faculty != null ? faculty : "");
+                    profilePicUrlEditText.setText(profilePicUrl != null ? profilePicUrl : "");
                 } else {
                     Toast.makeText(getContext(), "User data not found", Toast.LENGTH_SHORT).show();
                 }
@@ -138,16 +142,15 @@ public class EditProfileFragment extends DialogFragment {
                 Toast.makeText(getContext(), "Failed to load data: " + error.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
-
     }
 
-    private void saveUserData(String newBio, String newFaculty) {
+    private void saveUserData(String newBio, String newFaculty, String profilePicUrl) {
         String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
-
         DatabaseReference userRef = FirebaseDatabase.getInstance(databaseURL).getReference("Users").child(userId);
 
         userRef.child("bio").setValue(newBio);
-        userRef.child("faculty").setValue(newFaculty).addOnCompleteListener(task -> {
+        userRef.child("faculty").setValue(newFaculty);
+        userRef.child("profilePictureUrl").setValue(profilePicUrl).addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 Toast.makeText(getContext(), "Profile updated successfully", Toast.LENGTH_SHORT).show();
             } else {
@@ -155,4 +158,5 @@ public class EditProfileFragment extends DialogFragment {
             }
         });
     }
+
 }

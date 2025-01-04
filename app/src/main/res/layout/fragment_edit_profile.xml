@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:padding="16dp">
+    android:padding="20dp">
 
     <!-- Bio Section -->
     <TextView
@@ -20,18 +19,18 @@
         android:layout_height="80dp"
         android:hint="Enter your bio"
         android:inputType="textMultiLine"
-        android:scrollbars="vertical"
         android:maxLines="5"
-        android:padding="8dp"/>
+        android:padding="8dp"
+        android:scrollbars="vertical" />
 
     <!-- Faculty Section -->
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
         android:text="Faculty"
         android:textSize="16sp"
-        android:textStyle="bold"
-        android:layout_marginTop="16dp" />
+        android:textStyle="bold" />
 
     <EditText
         android:id="@+id/facultyEditText"
@@ -39,21 +38,41 @@
         android:layout_height="80dp"
         android:hint="Enter your faculty"
         android:inputType="textMultiLine"
-        android:scrollbars="vertical"
         android:maxLines="5"
-        android:padding="8dp"/>
+        android:padding="8dp"
+        android:scrollbars="vertical" />
+
+    <!-- Profile Picture Section -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="Profile Picture URL"
+        android:textSize="16sp"
+        android:textStyle="bold" />
+
+    <EditText
+        android:id="@+id/profilePicUrlEditText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Enter Image URL"
+        android:inputType="textMultiLine"
+        android:maxLines="5"
+        android:padding="8dp"
+        android:scrollbars="vertical" />
+
 
     <!-- Save Button -->
     <Button
         android:id="@+id/saveButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Save Changes"
-        android:layout_marginTop="16dp" />
+        android:layout_marginTop="16dp"
+        android:text="Save Changes" />
 
     <Button
+        android:id="@+id/cancelButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/cancelButton"
         android:text="Cancel" />
 </LinearLayout>

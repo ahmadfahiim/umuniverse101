@@ -100,9 +100,10 @@ public class Registration extends AppCompatActivity {
                 String bio = "Placeholder bio. Please add one if you wish.";
                 String faculty = "Placeholder faculty. Please add one if you wish.";
                 int eventsJoined = 0;
+                String profilePictureUrl = "Please add URL link for profile picture";
                 if (task.isSuccessful()) {
                     String userId = Objects.requireNonNull(mAuth.getCurrentUser()).getUid();
-                    AppUser user = new AppUser(username, email, bio, faculty, eventsJoined);
+                    AppUser user = new AppUser(username, email, bio, faculty, eventsJoined, profilePictureUrl);
 
                     System.out.println("Authentication successful. User ID: " + userId);
 

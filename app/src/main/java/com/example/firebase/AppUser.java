@@ -2,18 +2,19 @@ package com.example.firebase;
 
 public class AppUser {
 
-    String username, email, bio, faculty;
+    String username, email, bio, faculty, profilePictureUrl;
     int eventsJoined;
 
     public AppUser() {
     }
 
-    public AppUser(String username, String email, String bio, String faculty, int eventsJoined) {
+    public AppUser(String username, String email, String bio, String faculty, int eventsJoined, String profilePictureUrl) {
         this.username = username;
         this.email = email;
         this.bio = bio;
         this.faculty = faculty;
         this.eventsJoined = eventsJoined;
+        this.profilePictureUrl = profilePictureUrl;
     }
 
     public String getUsername() {
@@ -55,5 +56,7 @@ public class AppUser {
     public void setEventsJoined(int eventsJoined) {
         this.eventsJoined = eventsJoined;
     }
+    public String getProfilePictureUrl() { return profilePictureUrl; }
 
+    public void setProfilePictureUrl(String profilePictureUrl) { this.profilePictureUrl = profilePictureUrl; }
 }
