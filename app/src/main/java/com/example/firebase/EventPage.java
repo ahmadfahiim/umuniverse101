@@ -62,8 +62,7 @@ public class EventPage extends AppCompatActivity {
 
         createEventButton = findViewById(R.id.createEvent);
         createEventButton.setOnClickListener(v -> {
-            Intent intent = new Intent(EventPage.this, EventDescriptionPage.class);
-            intent.putExtra("eventId", event.getId()); // Ensure event.getId() returns a valid ID.
+            Intent intent = new Intent(EventPage.this, CreateEventActivity.class);
             startActivity(intent);
         });
 
