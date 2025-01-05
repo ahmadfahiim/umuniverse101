@@ -22,7 +22,7 @@ public class EventDescriptionPage extends AppCompatActivity {
 
     private TextView nameTextView, dateTextView, venueTextView, startTimeTextView, endTimeTextView, categoryTextView, descriptionTextView, ownerTextView, ownerEmailTextView;
     private ImageView eventImageView, ivOwnerIcon;
-    private Button joinEventButton, btnBack;
+    private Button joinEventButton, btnBack, btnViewParticipants;
     private DatabaseReference eventRef;
     private DatabaseReference userRef;
     String databaseURL = "https://umuniverse-1d81d-default-rtdb.asia-southeast1.firebasedatabase.app/";
@@ -46,6 +46,7 @@ public class EventDescriptionPage extends AppCompatActivity {
         ownerEmailTextView = findViewById(R.id.ownerEmailTextView);
         joinEventButton = findViewById(R.id.joinEventButton);
         btnBack = findViewById(R.id.btnBack);
+        btnViewParticipants = findViewById(R.id.btnViewParticipants);
 
         // Get event ID from the intent
         String eventId = getIntent().getStringExtra("eventId");
@@ -77,6 +78,13 @@ public class EventDescriptionPage extends AppCompatActivity {
         btnBack.setOnClickListener(v -> {
             Intent eventsIntent = new Intent(getApplicationContext(), EventPage.class);
             startActivity(eventsIntent);
+        });
+
+        btnViewParticipants.setOnClickListener(v -> {
+            Intent participantsIntent = new Intent(getApplicationContext(), ProfileList.class);
+            participantsIntent.putExtra("eventId", eventId);
+            startActivity(participantsIntent);
+
         });
     }
 

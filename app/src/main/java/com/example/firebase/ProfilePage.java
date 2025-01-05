@@ -99,14 +99,19 @@ public class ProfilePage extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (snapshot.exists()) {
                     String name = snapshot.child("username").getValue(String.class);
-                    Long eventsJoinedLong = snapshot.child("eventsJoined").getValue(Long.class);
                     String bio = snapshot.child("bio").getValue(String.class);
                     String faculty = snapshot.child("faculty").getValue(String.class);
                     String profilePicUrl = snapshot.child("profilePictureUrl").getValue(String.class);
-                    String eventsJoined = eventsJoinedLong != null ? String.valueOf(eventsJoinedLong) : "0";
+
+                    // Count the number of events in joinedEvents
+                    DataSnapshot joinedEventsSnapshot = snapshot.child("joinedEvents");
+                    int eventsCount = 0;
+                    if (joinedEventsSnapshot.exists()) {
+                        eventsCount = (int) joinedEventsSnapshot.getChildrenCount();
+                    }
 
                     profileName.setText(name);
-                    eventCount.setText(eventsJoined);
+                    eventCount.setText(String.valueOf(eventsCount));
                     personalBio.setText(bio);
                     personalFaculty.setText(faculty);
 

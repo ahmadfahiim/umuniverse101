@@ -15,6 +15,9 @@
         android:theme="@style/AppTheme"
         tools:targetApi="31">
         <activity
+            android:name=".OtherProfilePage"
+            android:exported="false" />
+        <activity
             android:name=".ForgotPassword"
             android:exported="false" />
         <activity
@@ -40,6 +43,9 @@
             android:exported="false" />
         <activity
             android:name=".EventPage"
+            android:exported="false" />
+        <activity
+            android:name=".ProfileList"
             android:exported="false" />
         <activity
             android:name=".Welcome"
