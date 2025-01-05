@@ -1,5 +1,6 @@
 package com.example.firebase;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -43,9 +44,12 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
         if (event.getPhotoUrl() != null && !event.getPhotoUrl().isEmpty()) {
             Glide.with(holder.itemView.getContext())
                     .load(event.getPhotoUrl())
+                    .placeholder(R.drawable.edit_pen) // Temporary placeholder during loading
+                    .error(R.drawable.logo) // Fallback image if loading fails
                     .into(holder.photo);
         } else {
-            holder.photo.setImageResource(R.drawable.edit_pen); // Set a placeholder if no image is available
+            Log.d("EventAdapter", "Invalid photoUrl for event: " + event.getName());
+            holder.photo.setImageResource(R.drawable.edit_pen);  // Set a placeholder if no image is available
         }
 
         // Handle click events
@@ -72,6 +76,11 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
             photo = itemView.findViewById(R.id.eventPhoto);
             description = itemView.findViewById(R.id.eventDescription);
         }
+    }
+
+    public void filterList(List<Event> filteredList) {
+        this.eventList = filteredList;
+        notifyDataSetChanged();
     }
 
     public interface OnEventClickListener {

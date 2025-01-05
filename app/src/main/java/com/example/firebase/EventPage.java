@@ -2,20 +2,18 @@ package com.example.firebase;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SearchView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.*;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.database.DatabaseReference;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,7 +25,6 @@ public class EventPage extends AppCompatActivity {
     private List<Event> eventList;
     private ImageView createEventButton;
     private DatabaseReference databaseReference;
-    private Event event;
 
     public String databaseURL = "https://umuniverse-1d81d-default-rtdb.asia-southeast1.firebasedatabase.app/";
 
@@ -36,29 +33,38 @@ public class EventPage extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.event_page);
 
-
-
         // Initialize Firebase Database
         databaseReference = FirebaseDatabase.getInstance(databaseURL).getReference("Events");
 
-        System.out.println("onCreate for eventPage active.");
-
-        // Initialize RecyclerView
         recyclerView = findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         eventList = new ArrayList<>();
         eventAdapter = new EventAdapter(eventList, event -> {
-            // Open EventDescriptionPage and pass the event ID
             Intent intent = new Intent(this, EventDescriptionPage.class);
-            intent.putExtra("eventId", event.getId()); // Assuming Event has a getId() method
+            intent.putExtra("eventId", event.getId());
             startActivity(intent);
         });
         recyclerView.setAdapter(eventAdapter);
 
-
-        // Fetch Events from Firebase
         fetchEventsFromFirebase();
+
+        SearchView searchView = findViewById(R.id.searchView);
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                filterEvents(query);
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                filterEvents(newText);
+                return true;
+            }
+        });
+
+        setupFilterButtons();
 
         createEventButton = findViewById(R.id.createEvent);
         createEventButton.setOnClickListener(v -> {
@@ -66,24 +72,20 @@ public class EventPage extends AppCompatActivity {
             startActivity(intent);
         });
 
-        // Initialize Bottom Navigation
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottomNavigationBar);
         bottomNavigationView.setSelectedItemId(R.id.events);
 
         bottomNavigationView.setOnItemSelectedListener(item -> {
             int itemId = item.getItemId();
             if (itemId == R.id.home) {
-                Intent homeIntent = new Intent(getApplicationContext(), HomePage.class);
-                startActivity(homeIntent);
+                startActivity(new Intent(getApplicationContext(), HomePage.class));
             } else if (itemId == R.id.events) {
                 return true;
             } else if (itemId == R.id.bookings) {
-                Intent eventsIntent = new Intent(getApplicationContext(), BookingPage.class);
-                startActivity(eventsIntent);
+                startActivity(new Intent(getApplicationContext(), BookingPage.class));
                 return true;
             } else if (itemId == R.id.profile) {
-                Intent profileIntent = new Intent(getApplicationContext(), ProfilePage.class);
-                startActivity(profileIntent);
+                startActivity(new Intent(getApplicationContext(), ProfilePage.class));
                 return true;
             }
             return false;
@@ -94,12 +96,12 @@ public class EventPage extends AppCompatActivity {
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                eventList.clear(); // Clear current list
+                eventList.clear();
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     Event event = snapshot.getValue(Event.class);
                     eventList.add(event);
                 }
-                eventAdapter.notifyDataSetChanged(); // Update adapter
+                eventAdapter.notifyDataSetChanged();
             }
 
             @Override
@@ -109,4 +111,40 @@ public class EventPage extends AppCompatActivity {
         });
     }
 
+    private void filterEvents(String query) {
+        List<Event> filteredList = new ArrayList<>();
+        for (Event event : eventList) {
+            if (event.getName().toLowerCase().contains(query.toLowerCase())) {
+                filteredList.add(event);
+            }
+        }
+        eventAdapter.filterList(filteredList);
+    }
+
+    private void setupFilterButtons() {
+        Button allButton = findViewById(R.id.allButton);
+        Button musicButton = findViewById(R.id.musicButton);
+        Button sportsButton = findViewById(R.id.sportsButton);
+        Button techButton = findViewById(R.id.techButton);
+        Button eduButton = findViewById(R.id.eduButton);
+        Button socButton = findViewById(R.id.socButton);
+
+        allButton.setOnClickListener(v -> eventAdapter.filterList(eventList));
+
+        musicButton.setOnClickListener(v -> filterByCategory("Music"));
+        sportsButton.setOnClickListener(v -> filterByCategory("Sports"));
+        techButton.setOnClickListener(v -> filterByCategory("Technology"));
+        eduButton.setOnClickListener(v -> filterByCategory("Education"));
+        socButton.setOnClickListener(v -> filterByCategory("Social"));
+    }
+
+    private void filterByCategory(String category) {
+        List<Event> filteredList = new ArrayList<>();
+        for (Event event : eventList) {
+            if (event.getCategory().equalsIgnoreCase(category)) {
+                filteredList.add(event);
+            }
+        }
+        eventAdapter.filterList(filteredList);
+    }
 }
