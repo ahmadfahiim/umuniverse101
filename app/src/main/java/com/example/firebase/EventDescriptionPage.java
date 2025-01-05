@@ -20,10 +20,11 @@ import com.google.firebase.database.ValueEventListener;
 
 public class EventDescriptionPage extends AppCompatActivity {
 
-    private TextView nameTextView, dateTextView, venueTextView, startTimeTextView, endTimeTextView, categoryTextView, descriptionTextView;
-    private ImageView eventImageView;
+    private TextView nameTextView, dateTextView, venueTextView, startTimeTextView, endTimeTextView, categoryTextView, descriptionTextView, ownerTextView, ownerEmailTextView;
+    private ImageView eventImageView, ivOwnerIcon;
     private Button joinEventButton, btnBack;
     private DatabaseReference eventRef;
+    private DatabaseReference userRef;
     String databaseURL = "https://umuniverse-1d81d-default-rtdb.asia-southeast1.firebasedatabase.app/";
 
     @Override
@@ -40,6 +41,9 @@ public class EventDescriptionPage extends AppCompatActivity {
         categoryTextView = findViewById(R.id.eventCategoryTextView);
         descriptionTextView = findViewById(R.id.eventDescriptionTextView);
         eventImageView = findViewById(R.id.eventImageView);
+        ivOwnerIcon = findViewById(R.id.ivOwnerIcon);
+        ownerTextView = findViewById(R.id.ownerTextView);
+        ownerEmailTextView = findViewById(R.id.ownerEmailTextView);
         joinEventButton = findViewById(R.id.joinEventButton);
         btnBack = findViewById(R.id.btnBack);
 
@@ -90,6 +94,7 @@ public class EventDescriptionPage extends AppCompatActivity {
                     String category = snapshot.child("category").getValue(String.class);
                     String description = snapshot.child("description").getValue(String.class);
                     String photoUrl = snapshot.child("photoUrl").getValue(String.class);
+                    String userId = snapshot.child("owner").getValue(String.class);
 
                     // Populate the UI with fetched data
                     nameTextView.setText(name != null ? name : "Event Name Not Available");
@@ -105,6 +110,43 @@ public class EventDescriptionPage extends AppCompatActivity {
                         Glide.with(EventDescriptionPage.this).load(photoUrl).into(eventImageView);
                     } else {
                         eventImageView.setImageResource(R.drawable.home_4_svgrepo_com);
+                    }
+
+                    if (userId != null && !userId.isEmpty()) {
+                        DatabaseReference userRef = FirebaseDatabase.getInstance(databaseURL).getReference("Users").child(userId);
+                        userRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot userSnapshot) {
+                                if (userSnapshot.exists()) {
+                                    // Fetch owner details
+                                    String username = userSnapshot.child("username").getValue(String.class);
+                                    String email = userSnapshot.child("email").getValue(String.class);
+                                    String profilePictureUrl = userSnapshot.child("profilePictureUrl").getValue(String.class);
+
+                                    // Populate UI
+                                    ownerTextView.setText(username != null ? username : "Owner Name Not Available");
+                                    ownerEmailTextView.setText(email != null ? email : "Owner Email Not Available");
+
+                                    if (profilePictureUrl != null && !profilePictureUrl.isEmpty()) {
+                                        Glide.with(EventDescriptionPage.this).load(profilePictureUrl).into(ivOwnerIcon);
+                                    } else {
+                                        ivOwnerIcon.setImageResource(R.drawable.logo); // Placeholder image
+                                        System.out.println("For some reason, it's not loading the profile image");
+                                    }
+                                } else {
+                                    ownerTextView.setText("Owner Not Found");
+                                    ownerEmailTextView.setText("Owner Email Not Found");
+                                    ivOwnerIcon.setImageResource(R.drawable.logo); // Placeholder image
+                                }
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError error) {
+                                Toast.makeText(EventDescriptionPage.this, "Failed to load owner details", Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                    } else {
+                        ownerTextView.setText("Owner ID Not Available");
                     }
                 } else {
                     Toast.makeText(EventDescriptionPage.this, "Event not found", Toast.LENGTH_SHORT).show();

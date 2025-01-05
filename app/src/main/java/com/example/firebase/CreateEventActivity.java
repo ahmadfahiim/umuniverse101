@@ -22,6 +22,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import com.bumptech.glide.Glide;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
@@ -42,6 +43,7 @@ public class CreateEventActivity extends AppCompatActivity {
     private TextView tvLockdownMessage;
     private Button btnSubmitEvent, btnBack;
     private DatabaseReference databaseReference;
+    private FirebaseAuth auth;
     private EditText etEventPhotoUrl;
     String databaseURL = "https://umuniverse-1d81d-default-rtdb.asia-southeast1.firebasedatabase.app/";
 
@@ -166,6 +168,7 @@ public class CreateEventActivity extends AppCompatActivity {
         eventDetails.put("category", eventCategory);
         eventDetails.put("photoUrl", eventPhotoUrl);
         eventDetails.put("description", eventDescription);
+        eventDetails.put("owner", FirebaseAuth.getInstance().getCurrentUser().getUid());
 
         assert eventId != null;
         databaseReference.child(eventId).setValue(eventDetails).addOnCompleteListener(task -> {

@@ -19,15 +19,18 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.Calendar;
+
 public class HomePage extends AppCompatActivity {
 
     FirebaseAuth auth;
     Button logoutBtn;
-    TextView textView;
+    TextView tvUsername, tvGreeting;
     FirebaseUser user;
     FirebaseDatabase database;
     DatabaseReference ref;
     ImageView profileImageView;
+    String databaseURL = "https://umuniverse-1d81d-default-rtdb.asia-southeast1.firebasedatabase.app/";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,11 +40,12 @@ public class HomePage extends AppCompatActivity {
         // Initialize Firebase and UI components
         auth = FirebaseAuth.getInstance();
         logoutBtn = findViewById(R.id.logout);
-        textView = findViewById(R.id.user_email);
+        tvUsername = findViewById(R.id.tvUsername);
+        tvGreeting = findViewById(R.id.tvGreeting);
         profileImageView = findViewById(R.id.profilePic); // Profile picture ImageView
 
         user = auth.getCurrentUser();
-        database = FirebaseDatabase.getInstance();
+        database = FirebaseDatabase.getInstance(databaseURL);
         ref = database.getReference("Users");
 
         // Check if user is logged in
@@ -49,8 +53,7 @@ public class HomePage extends AppCompatActivity {
             startActivity(new Intent(getApplicationContext(), Login.class));
             finish();
         } else {
-            textView.setText(user.getEmail());
-            loadProfilePicture(user.getUid());
+            loadProfilePictureandUsername(user.getUid());
         }
 
         // Logout functionality
@@ -83,26 +86,63 @@ public class HomePage extends AppCompatActivity {
     }
 
     // Method to load profile picture from Firebase
-    private void loadProfilePicture(String userId) {
-        DatabaseReference userRef = ref.child(userId).child("profilePictureUrl");
+    private void loadProfilePictureandUsername(String userId) {
+        DatabaseReference userRef = ref.child(userId); // Reference to the user's data
         userRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                String profilePicUrl = snapshot.getValue(String.class);
-                if (profilePicUrl != null && !profilePicUrl.isEmpty()) {
-                    Glide.with(HomePage.this)
-                            .load(profilePicUrl)
-                            .placeholder(R.drawable.logo) // Optional placeholder image
-                            .into(profileImageView);
+                if (snapshot.exists()) {
+                    // Fetch the profile picture URL
+                    String profilePicUrl = snapshot.child("profilePictureUrl").getValue(String.class);
+                    if (profilePicUrl != null && !profilePicUrl.isEmpty()) {
+                        Glide.with(HomePage.this)
+                                .load(profilePicUrl)
+                                .placeholder(R.drawable.logo) // Optional placeholder image
+                                .into(profileImageView);
+                    } else {
+                        profileImageView.setImageResource(R.drawable.logo); // Default image
+                    }
+
+                    // Fetch the username
+                    String username = snapshot.child("username").getValue(String.class);
+                    updateGreetingMessage(username);
+                    if (username != null && !username.isEmpty()) {
+                        tvUsername.setText(username); // Assuming you have a TextView for the username
+                    } else {
+                        tvUsername.setText("Username Not Available");
+                    }
                 } else {
+                    // Handle the case where the snapshot does not exist
                     profileImageView.setImageResource(R.drawable.logo); // Default image
+                    tvUsername.setText("User Not Found");
                 }
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-                System.err.println("Failed to load profile picture: " + error.getMessage());
+                System.err.println("Failed to load user data: " + error.getMessage());
             }
         });
+    }
+
+    private void updateGreetingMessage(String username) {
+        // Get the current hour
+        Calendar calendar = Calendar.getInstance();
+        int hour = calendar.get(Calendar.HOUR_OF_DAY);
+
+        // Determine the time of day
+        String greeting;
+        if (hour >= 5 && hour < 12) {
+            greeting = "Good morning, ";
+        } else if (hour >= 12 && hour < 17) {
+            greeting = "Good afternoon, ";
+        } else if (hour >= 17 && hour < 21) {
+            greeting = "Good evening, ";
+        } else {
+            greeting = "Good night, ";
+        }
+
+        // Update the TextView
+        tvGreeting.setText(greeting);
     }
 }
