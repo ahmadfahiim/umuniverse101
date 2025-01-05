@@ -98,7 +98,6 @@
 
             </LinearLayout>
 
-
             <!-- Search Bar -->
             <EditText
                 android:layout_width="match_parent"
@@ -109,7 +108,7 @@
                 android:hint="Search"
                 android:padding="12dp" />
 
-                <!-- What's Happening Section -->
+            <!-- What's Happening Section -->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -125,27 +124,22 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="16dp"
                 android:orientation="vertical"
-                android:padding="16dp">
+                android:padding="16dp"
+                android:background="@drawable/login_container">
 
                 <ImageView
                     android:layout_width="match_parent"
                     android:layout_height="180dp"
-                    android:contentDescription="Table Tennis" />
+                    android:contentDescription="Welcome"
+                    android:src="@drawable/universiti" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
-                    android:text="70% OFF - Table Tennis contest. Book fast!"
-                    android:textSize="14sp" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="4dp"
-                    android:text="Read more"
-                    android:textColor="@color/blue"
-                    android:textSize="14sp" />
+                    android:text="Welcome to Our UM UNIVERSE !!!!
+                                  We urge everyone to join events of your desire"
+                    android:textSize="16sp" />
             </LinearLayout>
 
             <!-- Second Card -->
@@ -154,27 +148,23 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="16dp"
                 android:orientation="vertical"
-                android:padding="16dp">
+                android:padding="16dp"
+                android:background="@drawable/login_container">
+
 
                 <ImageView
                     android:layout_width="match_parent"
                     android:layout_height="180dp"
-                    android:contentDescription="Resnet Conference" />
+                    android:contentDescription="update"
+                    android:src="@drawable/update" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
-                    android:text="New RESNET conference announced for February 21st"
-                    android:textSize="14sp" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="4dp"
-                    android:text="Read more"
-                    android:textColor="@color/blue"
-                    android:textSize="14sp" />
+                    android:text="Updates are coming your way
+                                   Stay tune for more exciting features in the future"
+                    android:textSize="16sp" />
             </LinearLayout>
         </LinearLayout>
     </ScrollView>
@@ -189,6 +179,5 @@
         app:layout_constraintStart_toStartOf="parent"
         app:menu="@menu/bottom_nav_menu"
         android:background="@color/blue"/>
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>
