@@ -3,6 +3,12 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="sign_up"><u>Sign up</u></string>
     <string name="sign_in"><u>Sign in</u></string>
+    <string name="terms_and_conditions">
+        Welcome to  the UMUniVerse app! By accessing or using this app, you agree to be bound by the following Terms and Conditions. All users must register with valid university credentials to participate in events, and you are responsible for maintaining the confidentiality of your login credentials. Sharing your account or credentials with others is strictly prohibited. Event participation is offered on a first-come, first-served basis, and cancellations must be made at least 24 hours prior to the events start time. The organizers reserve the right to modify or cancel events without prior notice. Participants are required to adhere to the university code of conduct, and any disruptive behavior, including harassment, discrimination, or misconduct, will result in removal from the event and potential disciplinary action.
+        UMUniVerse and event organizers are not liable for any personal injury, property loss, or damages incurred during events. Users are advised to take necessary precautions and follow safety instructions provided by the organizers. Personal data collected through the app will be used solely for event registration and communication purposes. Your data will not be shared with third parties without your consent, except as required by law. By participating in events, you consent to the use of your images, videos, and recordings for promotional purposes by UMUniVerse and the university. If you do not wish to be included, you must inform the event organizers in advance.
+        The app is provided as is without any warranties of any kind, and users must not engage in activities that disrupt or compromise the apps functionality, including unauthorized access or tampering. UMUniVerse reserves the right to update these Terms and Conditions at any time, and users will be notified of significant changes through the app or email. For any questions or concerns regarding these Terms and Conditions, please contact [universe@um.edu.my]. By using this app, you acknowledge that you have read, understood, and agreed to these Terms and Conditions.
+    </string>
+
 
     <string-array name="categories_array">
         <item>Technology</item>

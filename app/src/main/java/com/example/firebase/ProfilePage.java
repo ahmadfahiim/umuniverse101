@@ -25,7 +25,7 @@ import com.google.firebase.database.ValueEventListener;
 public class ProfilePage extends AppCompatActivity {
 
     private TextView profileName, eventCount, personalBio, personalFaculty;
-    private ImageView edit_icon, profileImage;
+    private ImageView edit_icon, profileImage, settings_icon;
     private View blurBackground;
     private FrameLayout bioCard, facultyCard;
     private DatabaseReference userRef;
@@ -44,6 +44,7 @@ public class ProfilePage extends AppCompatActivity {
         bioCard = findViewById(R.id.bioCard);
         facultyCard = findViewById(R.id.facultyCard);
         edit_icon = findViewById(R.id.edit_icon);
+        settings_icon = findViewById(R.id.settings_icon);
         blurBackground = findViewById(R.id.blur_background);
         profileImage = findViewById(R.id.profile_picture); // New ImageView for profile picture
 
@@ -70,6 +71,11 @@ public class ProfilePage extends AppCompatActivity {
             fragmentTransaction.replace(R.id.fragment_container, editProfileFragment);
             fragmentTransaction.addToBackStack(null);
             fragmentTransaction.commit();
+        });
+
+        settings_icon.setOnClickListener(v -> {
+            Intent intent = new Intent(ProfilePage.this, Settings.class);
+            startActivity(intent);
         });
 
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottomNavigationBar);
