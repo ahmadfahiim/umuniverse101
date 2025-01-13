@@ -192,6 +192,7 @@
             android:id="@+id/bottomNavigationBar"
             android:layout_width="match_parent"
             android:layout_height="70dp"
+            app:itemIconSize="40dp"
             android:background="@drawable/bottom_nav_shape"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

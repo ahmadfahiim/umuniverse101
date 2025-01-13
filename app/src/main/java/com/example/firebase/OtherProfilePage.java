@@ -50,11 +50,25 @@ public class OtherProfilePage extends AppCompatActivity {
 
     }
 
+
     private void loadUserProfile(String userId) {
         userRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (snapshot.exists()) {
+                    // Check if the profile is hidden
+                    Boolean hideProfile = snapshot.child("hideProfile").getValue(Boolean.class);
+                    if (Boolean.TRUE.equals(hideProfile)) {
+                        // Profile is hidden - display a placeholder or message
+                        profileName.setText("This profile is hidden");
+                        personal_bio.setText("The user has hidden their profile.");
+                        personal_faculty.setText("The user has hidden their profile");
+                        event_count.setText("-");
+                        profile_picture.setImageResource(R.drawable.logo); // Default profile picture
+                        return; // Stop further processing
+                    }
+
+                    // Load and display user profile data
                     String username = snapshot.child("username").getValue(String.class);
                     String profilePictureUrl = snapshot.child("profilePictureUrl").getValue(String.class);
                     String bio = snapshot.child("bio").getValue(String.class);
@@ -77,6 +91,13 @@ public class OtherProfilePage extends AppCompatActivity {
                     } else {
                         profile_picture.setImageResource(R.drawable.logo);
                     }
+                } else {
+                    // Handle case where user data does not exist
+                    profileName.setText("Profile not found");
+                    personal_bio.setText("");
+                    personal_faculty.setText("");
+                    event_count.setText("");
+                    profile_picture.setImageResource(R.drawable.logo);
                 }
             }
 

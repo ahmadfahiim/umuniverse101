@@ -47,6 +47,7 @@
         android:layout_width="match_parent"
         android:layout_height="70dp"
         android:background="@drawable/bottom_nav_shape"
-        app:menu="@menu/bottom_nav_menu" />
+        app:menu="@menu/bottom_nav_menu"
+        app:itemIconSize="40dp"/>
 
 </LinearLayout>
