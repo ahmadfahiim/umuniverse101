@@ -16,6 +16,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.database.*;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class EventPage extends AppCompatActivity {
@@ -23,6 +24,7 @@ public class EventPage extends AppCompatActivity {
     private RecyclerView recyclerView;
     private EventAdapter eventAdapter;
     private List<Event> eventList;
+    private Button sortByRelevanceButton;
     private ImageView createEventButton;
     private DatabaseReference databaseReference;
 
@@ -46,6 +48,13 @@ public class EventPage extends AppCompatActivity {
             startActivity(intent);
         });
         recyclerView.setAdapter(eventAdapter);
+
+        Button sortByRelevanceButton = findViewById(R.id.sortByRelevanceButton);
+        sortByRelevanceButton.setOnClickListener(v -> {
+            sortEventsByRelevance();
+            Toast.makeText(this, "Events sorted by relevance", Toast.LENGTH_SHORT).show();
+        });
+
 
         fetchEventsFromFirebase();
 
@@ -147,4 +156,21 @@ public class EventPage extends AppCompatActivity {
         }
         eventAdapter.filterList(filteredList);
     }
+
+    private void sortEventsByRelevance() {
+        Collections.sort(eventList, (event1, event2) -> {
+            int dateComparison = event1.getDate().compareTo(event2.getDate());
+            if (dateComparison != 0) {
+                return dateComparison;
+            }
+            int startTimeComparison = event1.getStartTime().compareTo(event2.getStartTime());
+            if (startTimeComparison != 0) {
+                return startTimeComparison;
+            }
+
+            return event1.getLocation().compareTo(event2.getLocation());
+        });
+        eventAdapter.notifyDataSetChanged();
+    }
+
 }
