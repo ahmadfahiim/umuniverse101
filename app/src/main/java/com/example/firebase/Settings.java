@@ -18,7 +18,7 @@ import com.google.firebase.database.FirebaseDatabase;
 
 public class Settings extends AppCompatActivity {
 
-    private Switch rememberMeToggle;
+    private Switch rememberMeToggle, hideProfileToggle;
     private Button btnBack;
     private TextView termsAndConditions;
     String databaseURL = "https://umuniverse-1d81d-default-rtdb.asia-southeast1.firebasedatabase.app/";
@@ -33,6 +33,7 @@ public class Settings extends AppCompatActivity {
         setContentView(R.layout.settings_page);
 
         rememberMeToggle = findViewById(R.id.rememberMeToggle);
+        hideProfileToggle = findViewById(R.id.hideProfileToggle);
 
         SharedPreferences prefs = getSharedPreferences("MyPrefs", MODE_PRIVATE);
 
@@ -49,6 +50,25 @@ public class Settings extends AppCompatActivity {
                 editor.apply();
                 Toast.makeText(getApplicationContext(), "Remember Me disabled", Toast.LENGTH_SHORT).show();
             }
+        });
+
+        userRef.child(auth.getCurrentUser().getUid()).child("hideProfile").get().addOnCompleteListener(task -> {
+            if (task.isSuccessful() && task.getResult() != null) {
+                boolean isHidden = Boolean.TRUE.equals(task.getResult().getValue(Boolean.class));
+                hideProfileToggle.setChecked(isHidden);
+            }
+        });
+
+        hideProfileToggle.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            userRef.child(auth.getCurrentUser().getUid()).child("hideProfile").setValue(isChecked)
+                    .addOnCompleteListener(task -> {
+                        if (task.isSuccessful()) {
+                            String message = isChecked ? "Profile hidden" : "Profile visible";
+                            Toast.makeText(Settings.this, message, Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(Settings.this, "Failed to update profile visibility", Toast.LENGTH_SHORT).show();
+                        }
+                    });
         });
 
         btnBack = findViewById(R.id.btnBack);
