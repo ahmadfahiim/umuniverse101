@@ -16,7 +16,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Events Booked"
-            android:textSize="24sp"
+            android:textSize="29sp"
             android:textStyle="bold"
             android:gravity="center"
             android:padding="16dp"
@@ -45,8 +45,8 @@
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottomNavigationBar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/blue"
+        android:layout_height="70dp"
+        android:background="@drawable/bottom_nav_shape"
         app:menu="@menu/bottom_nav_menu" />
 
 </LinearLayout>

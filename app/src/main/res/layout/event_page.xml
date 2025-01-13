@@ -11,28 +11,96 @@
         android:layout_height="match_parent"
         tools:context=".EventPage">
 
-        <ImageView
-            android:id="@+id/createEvent"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.042"
-            app:layout_constraintStart_toStartOf="parent"
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cardView"
+            android:layout_width="match_parent"
+            android:layout_height="220dp"
+            android:layout_margin="8dp"
+            app:cardElevation="8dp"
+            app:cardCornerRadius="12dp"
+            app:cardBackgroundColor="@color/blue"
             app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@android:drawable/ic_input_add" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent">
 
-        <androidx.appcompat.widget.SearchView
-            android:id="@+id/searchView"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_margin="16dp"
-            android:iconifiedByDefault="false"
-            app:layout_constraintBottom_toTopOf="@+id/bottomNavigationBar"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.18" />
+            <LinearLayout
+                android:id="@+id/topBar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="8dp">
+
+                <!-- Title TextView -->
+                <TextView
+                    android:id="@+id/titleTextView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Events"
+                    android:textSize="29sp"
+                    android:textStyle="bold"
+                    android:gravity="center"
+                    android:padding="8dp"
+                    android:textColor="@android:color/white" />
+
+
+                <androidx.appcompat.widget.SearchView
+                    android:id="@+id/searchView"
+                    android:hint="Search for events"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/rounded_search_background"
+                    android:iconifiedByDefault="false"
+                    android:layout_marginTop="8dp"
+                    android:layout_margin="10dp"/>
+
+                <!-- Add Event Icon -->
+                <ImageView
+                    android:id="@+id/createEvent"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_gravity="end"
+                    android:layout_marginTop="12dp"
+                    android:layout_marginEnd="16dp"
+                    android:contentDescription="Create Event"
+                    android:background="@drawable/circle_background"
+                    app:srcCompat="@android:drawable/ic_input_add"
+                    android:padding="8dp" />
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+
+<!--        <LinearLayout-->
+<!--            android:id="@+id/topBar"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:orientation="vertical"-->
+<!--            app:layout_constraintTop_toTopOf="parent"-->
+<!--            app:layout_constraintStart_toStartOf="parent"-->
+<!--            app:layout_constraintEnd_toEndOf="parent">-->
+
+<!--            <TextView-->
+<!--                android:id="@+id/titleTextView"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:text="Settings"-->
+<!--                android:textSize="24sp"-->
+<!--                android:textStyle="bold"-->
+<!--                android:gravity="center"-->
+<!--                android:padding="16dp"-->
+<!--                android:background="@color/blue"-->
+<!--                android:textColor="@android:color/white" />-->
+
+<!--            <androidx.appcompat.widget.SearchView-->
+<!--                android:layout_width="0dp"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:id="@+id/searchView"/>-->
+
+<!--            <ImageView-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                app:srcCompat="@android:drawable/ic_input_add"-->
+<!--                android:id="@+id/createEvent" />-->
+
+<!--        </LinearLayout>-->
 
         <!-- RecyclerView for event list -->
         <LinearLayout
@@ -43,7 +111,7 @@
             android:padding="8dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/searchView">
+            app:layout_constraintTop_toBottomOf="@id/cardView">
 
             <!-- Use HorizontalScrollView to allow horizontal scrolling -->
             <HorizontalScrollView
@@ -110,26 +178,12 @@
         <com.google.android.material.bottomnavigation.BottomNavigationView
             android:id="@+id/bottomNavigationBar"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/blue"
+            android:layout_height="70dp"
+            android:background="@drawable/bottom_nav_shape"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:menu="@menu/bottom_nav_menu" />
-
-        <TextView
-            android:id="@+id/textView"
-            android:layout_width="178dp"
-            android:layout_height="60dp"
-            android:layout_marginBottom="28dp"
-            android:text="EVENTS"
-            android:textSize="48sp"
-            app:layout_constraintBottom_toTopOf="@+id/searchView"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.497"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="1.0" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

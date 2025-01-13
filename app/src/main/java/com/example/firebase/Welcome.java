@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.AppCompatButton;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -22,7 +23,7 @@ public class Welcome extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState); // Call super first
         EdgeToEdge.enable(this);
-        setContentView(R.layout.welcome_page);
+        setContentView(R.layout.welcome_page_improved);
 
         // Initialize FirebaseAuth instance
         auth = FirebaseAuth.getInstance();
@@ -44,9 +45,10 @@ public class Welcome extends AppCompatActivity {
             // Optionally, provide a message or handle UI appropriately
         }
 
+
         // Declarations of buttons for login and registration
-        Button btnLogin = findViewById(R.id.loginbutton);
-        Button btnRegister = findViewById(R.id.registerbutton);
+        TextView btnLogin = findViewById(R.id.loginbutton);
+        AppCompatButton btnRegister = findViewById(R.id.registerbutton);
 
         // onClickListener for login button
         btnLogin.setOnClickListener(view -> {

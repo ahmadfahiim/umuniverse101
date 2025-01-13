@@ -19,7 +19,7 @@
             android:id="@+id/titleTextView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Settings"
+            android:text="Terms and Conditions"
             android:textSize="24sp"
             android:textStyle="bold"
             android:gravity="center"
@@ -39,15 +39,43 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
-        <TextView
-            android:id="@+id/termsText"
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="16dp"
-            android:text="@string/terms_and_conditions"
-            android:textSize="16sp"
-            android:lineSpacingExtra="8dp"
-            android:textColor="@android:color/black"/>
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="16dp"
+                android:text="@string/terms_and_conditions_1"
+                android:textSize="16sp"
+                android:lineSpacingExtra="8dp"
+                android:textColor="@android:color/black"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/terms_and_conditions_2"
+                android:padding="16dp"
+                android:textSize="16sp"
+                android:lineSpacingExtra="8dp"
+                android:textColor="@android:color/black"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/terms_and_conditions_3"
+                android:padding="16dp"
+                android:textSize="16sp"
+                android:lineSpacingExtra="8dp"
+                android:textColor="@android:color/black"/>
+
+        </LinearLayout>
+
+
+
 
     </ScrollView>
 
