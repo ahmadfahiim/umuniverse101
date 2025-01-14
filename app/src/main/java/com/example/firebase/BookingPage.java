@@ -50,8 +50,15 @@ public class BookingPage extends AppCompatActivity {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         eventList = new ArrayList<>();
+        // Initialize the EventAdapter with a click listener
         eventAdapter = new EventAdapter(eventList, event -> {
+            // Create an intent to navigate to BookingDescriptionPage
+            Intent intent = new Intent(this, BookingDescriptionPage.class);
+            // Pass the event ID to the BookingDescriptionPage
+            intent.putExtra("eventId", event.getId());
+            startActivity(intent);
         });
+
         recyclerView.setAdapter(eventAdapter);
 
         String userId = auth.getUid();

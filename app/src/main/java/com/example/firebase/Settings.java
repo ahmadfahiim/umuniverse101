@@ -3,13 +3,16 @@ package com.example.firebase;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.text.InputType;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -19,7 +22,7 @@ import com.google.firebase.database.FirebaseDatabase;
 public class Settings extends AppCompatActivity {
 
     private Switch rememberMeToggle, hideProfileToggle;
-    private Button btnBack;
+    private Button btnBack, btnBecomeAdmin;
     private TextView termsAndConditions;
     String databaseURL = "https://umuniverse-1d81d-default-rtdb.asia-southeast1.firebasedatabase.app/";
     FirebaseAuth auth = FirebaseAuth.getInstance();
@@ -82,6 +85,39 @@ public class Settings extends AppCompatActivity {
             startActivity(intent);
         });
 
+        btnBecomeAdmin = findViewById(R.id.btnBecomeAdmin);
+        btnBecomeAdmin.setOnClickListener(v -> {
+            // Show a dialog to enter admin code
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle("Enter Admin Code");
+
+            final EditText input = new EditText(this);
+            input.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+            builder.setView(input);
+
+            builder.setPositiveButton("Submit", (dialog, which) -> {
+                String adminCode = input.getText().toString();
+
+                // Validate the admin code
+                if (validateAdminCode(adminCode)) {
+                    String userId = auth.getCurrentUser().getUid();
+                    userRef.child(userId).child("role").setValue("admin")
+                            .addOnCompleteListener(task -> {
+                                if (task.isSuccessful()) {
+                                    Toast.makeText(Settings.this, "You are now an admin!", Toast.LENGTH_SHORT).show();
+                                } else {
+                                    Toast.makeText(Settings.this, "Failed to update admin status.", Toast.LENGTH_SHORT).show();
+                                }
+                            });
+                } else {
+                    Toast.makeText(Settings.this, "Invalid admin code.", Toast.LENGTH_SHORT).show();
+                }
+            });
+
+            builder.setNegativeButton("Cancel", (dialog, which) -> dialog.cancel());
+            builder.show();
+        });
+
 
     }
 
@@ -92,5 +128,10 @@ public class Settings extends AppCompatActivity {
             editor.putBoolean("rememberMe", true);
             editor.apply();
         }
+    }
+
+    private boolean validateAdminCode(String code) {
+        // Hardcoded admin code
+        return "password".equals(code);
     }
 }

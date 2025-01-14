@@ -53,20 +53,35 @@
         android:layout_marginTop="24dp"
         android:layout_marginStart="24dp" />
 
-
-
-    <TextView
-        android:id="@+id/profileName"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Jack Hoffman"
-        android:textSize="29sp"
-        android:textStyle="bold"
-        android:textColor="@color/black"
-        android:layout_marginTop="10dp"
+        android:id="@+id/nameAndRole"
+        android:orientation="horizontal"
         app:layout_constraintTop_toBottomOf="@id/profile_picture"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        android:gravity="center"
+        android:layout_marginTop="10dp">
+
+        <TextView
+            android:id="@+id/profileName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Jack Hoffman"
+            android:textSize="29sp"
+            android:textStyle="bold"
+            android:textColor="@color/black" />
+
+        <ImageView
+            android:id="@+id/adminIcon"
+            android:layout_width="29dp"
+            android:layout_height="29dp"
+            android:src="@drawable/administrator"
+            android:layout_marginStart="7dp"
+            android:visibility="gone"/>
+    </LinearLayout>
+
 
     <LinearLayout
         android:id="@+id/statsSection"
@@ -76,14 +91,15 @@
         android:layout_marginTop="16dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/profileName" >
+        app:layout_constraintTop_toBottomOf="@id/nameAndRole" >
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Events Joined"
             android:textColor="@color/black"
-            android:textSize="16sp" />
+            android:textSize="16sp"
+            android:textStyle="bold"/>
 
         <View
             android:layout_width="1dp"
@@ -98,7 +114,8 @@
             android:layout_height="wrap_content"
             android:text="69"
             android:textSize="16sp"
-            android:textColor="@color/black"/>
+            android:textColor="@color/black"
+            android:textStyle="bold"/>
 
     </LinearLayout>
 

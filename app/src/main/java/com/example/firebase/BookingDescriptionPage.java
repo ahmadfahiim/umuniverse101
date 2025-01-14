@@ -2,40 +2,38 @@ package com.example.firebase;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.provider.ContactsContract;
-import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Button;
 import android.widget.Toast;
 
+import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.graphics.Insets;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsCompat;
 
 import com.bumptech.glide.Glide;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-public class EventDescriptionPage extends AppCompatActivity {
+public class BookingDescriptionPage extends AppCompatActivity {
 
     private TextView nameTextView, dateTextView, venueTextView, startTimeTextView, endTimeTextView, categoryTextView, descriptionTextView, ownerTextView, ownerEmailTextView;
     private ImageView eventImageView, ivOwnerIcon;
-    private Button joinEventButton, btnBack, btnViewParticipants, btnDeleteEvent;
-    private DatabaseReference eventRef;
-    private DatabaseReference userRef;
-    private FirebaseAuth auth;
+    private Button btnCancelBooking, btnBack, btnViewParticipants;
+    private DatabaseReference eventRef, usersRef, eventMainRef;
     String databaseURL = "https://umuniverse-1d81d-default-rtdb.asia-southeast1.firebasedatabase.app/";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.event_description_page);
+        setContentView(R.layout.booking_description_page);
 
         // Initialize UI components
         nameTextView = findViewById(R.id.eventNameTextView);
@@ -49,13 +47,9 @@ public class EventDescriptionPage extends AppCompatActivity {
         ivOwnerIcon = findViewById(R.id.ivOwnerIcon);
         ownerTextView = findViewById(R.id.ownerTextView);
         ownerEmailTextView = findViewById(R.id.ownerEmailTextView);
-        joinEventButton = findViewById(R.id.joinEventButton);
+        btnCancelBooking = findViewById(R.id.btnCancelBooking);
         btnBack = findViewById(R.id.btnBack);
         btnViewParticipants = findViewById(R.id.btnViewParticipants);
-        btnDeleteEvent = findViewById(R.id.btnDeleteEvent);
-
-        btnDeleteEvent.setVisibility(View.GONE);
-
 
         // Get event ID from the intent
         String eventId = getIntent().getStringExtra("eventId");
@@ -69,49 +63,12 @@ public class EventDescriptionPage extends AppCompatActivity {
 
         // Initialize Firebase Database reference
         eventRef = FirebaseDatabase.getInstance(databaseURL).getReference("Events").child(eventId);
-        DatabaseReference userRef = FirebaseDatabase.getInstance(databaseURL).getReference("Users");
-
-        auth = FirebaseAuth.getInstance();
-        FirebaseUser user = auth.getCurrentUser();
-        if (user == null) {
-            Toast.makeText(this, "What the fuck? How did we even get here?", Toast.LENGTH_SHORT).show();
-            finish(); // Close the activity if no user is logged in
-            return;
-        }
+        usersRef = FirebaseDatabase.getInstance(databaseURL).getReference("Users");
+        eventMainRef = FirebaseDatabase.getInstance(databaseURL).getReference("Events");
 
         // Fetch event details from Firebase Realtime Database
         fetchEventDetails();
 
-        if (user != null) {
-            String userId = user.getUid();
-            userRef.child(userId).child("role").addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                    if (snapshot.exists()) {
-                        String role = snapshot.getValue(String.class);
-                        if ("admin".equalsIgnoreCase(role)) {
-                            btnDeleteEvent.setVisibility(View.VISIBLE);
-                        }
-                    }
-                }
-
-                @Override
-                public void onCancelled(@NonNull DatabaseError error) {
-                    Toast.makeText(EventDescriptionPage.this, "Failed to fetch user role.", Toast.LENGTH_SHORT).show();
-                }
-            });
-        }
-
-        // Handle Join Event button click
-        joinEventButton.setOnClickListener(v -> {
-            String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
-            if (userId != null) {
-                joinEvent(userId, eventId);
-            } else {
-                Toast.makeText(EventDescriptionPage.this, "Please log in to join the event.", Toast.LENGTH_SHORT).show();
-            }
-
-        });
 
         btnBack.setOnClickListener(v -> {
             Intent eventsIntent = new Intent(getApplicationContext(), EventPage.class);
@@ -125,35 +82,33 @@ public class EventDescriptionPage extends AppCompatActivity {
 
         });
 
-        btnDeleteEvent.setOnClickListener(v -> {
-            // Show a confirmation dialog
-            new AlertDialog.Builder(EventDescriptionPage.this)
-                    .setTitle("Delete Event")
-                    .setMessage("Are you sure you want to delete this event? This action cannot be undone.")
-                    .setPositiveButton("Yes", (dialog, which) -> {
-                        // Disable the delete button to prevent multiple clicks
-                        btnDeleteEvent.setEnabled(false);
+        // Get current user ID
+        FirebaseAuth auth = FirebaseAuth.getInstance();
+        String userId = auth.getUid();
 
-                        // Call the deleteEvent method
-                        deleteEvent(eventId, new DeleteEventCallback() {
-                            @Override
-                            public void onSuccess() {
-                                Toast.makeText(EventDescriptionPage.this, "Event successfully deleted.", Toast.LENGTH_SHORT).show();
-                                Intent intent = new Intent(getApplicationContext(), EventPage.class);
-                                startActivity(intent);
-                                finish(); // Close the current activity
-                            }
-
-                            @Override
-                            public void onFailure(String errorMessage) {
-                                Toast.makeText(EventDescriptionPage.this, "Failed to delete event: " + errorMessage, Toast.LENGTH_SHORT).show();
-                                btnDeleteEvent.setEnabled(true); // Re-enable the button
-                            }
+        btnCancelBooking.setOnClickListener(v -> {
+            if (userId != null && eventId != null) {
+                // Remove userId from joinedUsers in Events node
+                eventMainRef.child(eventId).child("joinedUsers").child(userId).removeValue()
+                        .addOnSuccessListener(aVoid -> {
+                            // Remove eventId from joinedEvents in Users node
+                            usersRef.child(userId).child("joinedEvents").child(eventId).removeValue()
+                                    .addOnSuccessListener(aVoid2 -> {
+                                        Toast.makeText(this, "Booking cancelled successfully!", Toast.LENGTH_SHORT).show();
+                                        startActivity(new Intent(getApplicationContext(), BookingPage.class));
+                                    })
+                                    .addOnFailureListener(e -> {
+                                        Toast.makeText(this, "Failed to cancel booking in user data.", Toast.LENGTH_SHORT).show();
+                                    });
+                        })
+                        .addOnFailureListener(e -> {
+                            Toast.makeText(this, "Failed to cancel booking in event data.", Toast.LENGTH_SHORT).show();
                         });
-                    })
-                    .setNegativeButton("No", null)
-                    .show();
+            } else {
+                Toast.makeText(this, "Error: User or event ID is null.", Toast.LENGTH_SHORT).show();
+            }
         });
+
     }
 
     private void fetchEventDetails() {
@@ -183,7 +138,7 @@ public class EventDescriptionPage extends AppCompatActivity {
 
                     // Load event image or set placeholder
                     if (photoUrl != null && !photoUrl.isEmpty()) {
-                        Glide.with(EventDescriptionPage.this).load(photoUrl).into(eventImageView);
+                        Glide.with(getApplicationContext()).load(photoUrl).into(eventImageView);
                     } else {
                         eventImageView.setImageResource(R.drawable.home_4_svgrepo_com);
                     }
@@ -204,7 +159,7 @@ public class EventDescriptionPage extends AppCompatActivity {
                                     ownerEmailTextView.setText(email != null ? email : "Owner Email Not Available");
 
                                     if (profilePictureUrl != null && !profilePictureUrl.isEmpty()) {
-                                        Glide.with(EventDescriptionPage.this).load(profilePictureUrl).into(ivOwnerIcon);
+                                        Glide.with(getApplicationContext()).load(profilePictureUrl).into(ivOwnerIcon);
                                     } else {
                                         ivOwnerIcon.setImageResource(R.drawable.logo); // Placeholder image
                                         System.out.println("For some reason, it's not loading the profile image");
@@ -218,82 +173,23 @@ public class EventDescriptionPage extends AppCompatActivity {
 
                             @Override
                             public void onCancelled(@NonNull DatabaseError error) {
-                                Toast.makeText(EventDescriptionPage.this, "Failed to load owner details", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getApplicationContext(), "Failed to load owner details", Toast.LENGTH_SHORT).show();
                             }
                         });
                     } else {
                         ownerTextView.setText("Owner ID Not Available");
                     }
                 } else {
-                    Toast.makeText(EventDescriptionPage.this, "Event not found", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), "Event not found", Toast.LENGTH_SHORT).show();
                     finish();
                 }
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-                Toast.makeText(EventDescriptionPage.this, "Failed to load event details", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "Failed to load event details", Toast.LENGTH_SHORT).show();
                 finish();
             }
         });
-    }
-
-    private void joinEvent(String userId, String eventId) {
-        DatabaseReference databaseRef = FirebaseDatabase.getInstance(databaseURL).getReference();
-
-        // Update the "joinedUsers" under the specific event
-        DatabaseReference eventJoinedUsersRef = databaseRef.child("Events").child(eventId).child("joinedUsers").child(userId);
-        eventJoinedUsersRef.setValue(true).addOnCompleteListener(task -> {
-            if (task.isSuccessful()) {
-                // Update the "joinedEvents" under the specific user
-                DatabaseReference userJoinedEventsRef = databaseRef.child("Users").child(userId).child("joinedEvents").child(eventId);
-                userJoinedEventsRef.setValue(true).addOnCompleteListener(userTask -> {
-                    if (userTask.isSuccessful()) {
-                        Toast.makeText(EventDescriptionPage.this, "Successfully joined the event!", Toast.LENGTH_SHORT).show();
-                    } else {
-                        Toast.makeText(EventDescriptionPage.this, "Failed to update user's joined events. Try again.", Toast.LENGTH_SHORT).show();
-                    }
-                });
-            } else {
-                Toast.makeText(EventDescriptionPage.this, "Failed to update event's joined users. Try again.", Toast.LENGTH_SHORT).show();
-            }
-        });
-    }
-
-    public void deleteEvent(String eventId, DeleteEventCallback callback) {
-        DatabaseReference eventsRef = FirebaseDatabase.getInstance(databaseURL).getReference("Events");
-        DatabaseReference usersRef = FirebaseDatabase.getInstance(databaseURL).getReference("Users");
-
-        // Reference to the specific event to delete
-        DatabaseReference eventRef = eventsRef.child(eventId);
-
-        // Step 1: Get the list of users who joined the event
-        eventRef.child("joinedUsers").addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if (snapshot.exists()) {
-                    // Remove references to the event in the Users node
-                    for (DataSnapshot userSnapshot : snapshot.getChildren()) {
-                        String userId = userSnapshot.getKey();
-                        usersRef.child(userId).child("joinedEvents").child(eventId).removeValue();
-                    }
-                }
-
-                // Step 2: Delete the event from the Events node
-                eventRef.removeValue()
-                        .addOnSuccessListener(aVoid -> callback.onSuccess())
-                        .addOnFailureListener(e -> callback.onFailure(e.getMessage()));
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                callback.onFailure(error.getMessage());
-            }
-        });
-    }
-
-    public interface DeleteEventCallback {
-        void onSuccess();
-        void onFailure(String errorMessage);
     }
 }

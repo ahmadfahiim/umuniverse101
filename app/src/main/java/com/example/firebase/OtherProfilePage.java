@@ -1,6 +1,7 @@
 package com.example.firebase;
 
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -20,7 +21,7 @@ import com.google.firebase.database.ValueEventListener;
 public class OtherProfilePage extends AppCompatActivity {
 
     String databaseURL = "https://umuniverse-1d81d-default-rtdb.asia-southeast1.firebasedatabase.app/";
-    private ImageView profile_picture;
+    private ImageView profile_picture, adminIcon;
     private TextView profileName, event_count, personal_bio, personal_faculty;
     private Button btnBack;
     private DatabaseReference userRef;
@@ -36,6 +37,7 @@ public class OtherProfilePage extends AppCompatActivity {
         event_count = findViewById(R.id.event_count);
         personal_bio = findViewById(R.id.personal_bio);
         personal_faculty = findViewById(R.id.personal_faculty);
+        adminIcon = findViewById(R.id.adminIcon);
 
         String userId = getIntent().getStringExtra("userId");
         if (userId != null) {
@@ -74,6 +76,8 @@ public class OtherProfilePage extends AppCompatActivity {
                     String bio = snapshot.child("bio").getValue(String.class);
                     String faculty = snapshot.child("faculty").getValue(String.class);
 
+                    String role = snapshot.child("role").getValue(String.class);
+
                     // Count the number of events in joinedEvents
                     DataSnapshot joinedEventsSnapshot = snapshot.child("joinedEvents");
                     int eventsCount = 0;
@@ -85,6 +89,13 @@ public class OtherProfilePage extends AppCompatActivity {
                     personal_bio.setText(bio != null ? bio : "Bio Not Available");
                     personal_faculty.setText(faculty != null ? faculty : "Faculty Not Available");
                     event_count.setText(String.valueOf(eventsCount));
+
+                    // Display or hide the admin icon based on the role
+                    if ("admin".equalsIgnoreCase(role)) {
+                        adminIcon.setVisibility(View.VISIBLE);
+                    } else {
+                        adminIcon.setVisibility(View.GONE);
+                    }
 
                     if (profilePictureUrl != null && !profilePictureUrl.isEmpty()) {
                         Glide.with(getApplicationContext()).load(profilePictureUrl).into(profile_picture);

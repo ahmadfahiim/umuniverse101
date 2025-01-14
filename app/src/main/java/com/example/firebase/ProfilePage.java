@@ -25,7 +25,7 @@ import com.google.firebase.database.ValueEventListener;
 public class ProfilePage extends AppCompatActivity {
 
     private TextView profileName, eventCount, personalBio, personalFaculty;
-    private ImageView edit_icon, profileImage, settings_icon;
+    private ImageView edit_icon, profileImage, settings_icon, adminIcon;
     private View blurBackground;
     private FrameLayout bioCard, facultyCard;
     private DatabaseReference userRef;
@@ -46,7 +46,8 @@ public class ProfilePage extends AppCompatActivity {
         edit_icon = findViewById(R.id.edit_icon);
         settings_icon = findViewById(R.id.settings_icon);
         blurBackground = findViewById(R.id.blur_background);
-        profileImage = findViewById(R.id.profile_picture); // New ImageView for profile picture
+        profileImage = findViewById(R.id.profile_picture);
+        adminIcon = findViewById(R.id.adminIcon);
 
         auth = FirebaseAuth.getInstance();
 
@@ -109,6 +110,8 @@ public class ProfilePage extends AppCompatActivity {
                     String faculty = snapshot.child("faculty").getValue(String.class);
                     String profilePicUrl = snapshot.child("profilePictureUrl").getValue(String.class);
 
+                    String role = snapshot.child("role").getValue(String.class);
+
                     // Count the number of events in joinedEvents
                     DataSnapshot joinedEventsSnapshot = snapshot.child("joinedEvents");
                     int eventsCount = 0;
@@ -120,6 +123,13 @@ public class ProfilePage extends AppCompatActivity {
                     eventCount.setText(String.valueOf(eventsCount));
                     personalBio.setText(bio);
                     personalFaculty.setText(faculty);
+
+                    // Display or hide the admin icon based on the role
+                    if ("admin".equalsIgnoreCase(role)) {
+                        adminIcon.setVisibility(View.VISIBLE);
+                    } else {
+                        adminIcon.setVisibility(View.GONE);
+                    }
 
                     // Load profile picture using Glide if the URL is valid
                     if (profilePicUrl != null && !profilePicUrl.isEmpty()) {
