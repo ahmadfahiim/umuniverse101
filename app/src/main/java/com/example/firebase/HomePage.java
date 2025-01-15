@@ -2,12 +2,17 @@ package com.example.firebase;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -19,23 +24,32 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 
 public class HomePage extends AppCompatActivity {
 
     FirebaseAuth auth;
-    Button logoutBtn;
+    RecyclerView recyclerViewAnnouncements;
+    Button logoutBtn, btnAddAnnouncement;
+    AnnouncementAdapter announcementAdapter;
     TextView tvUsername, tvGreeting;
     FirebaseUser user;
     FirebaseDatabase database;
-    DatabaseReference ref;
+    DatabaseReference ref, announcementsRef, userRef;
     ImageView profileImageView;
+    List<Announcement> announcementList = new ArrayList<>();
     String databaseURL = "https://umuniverse-1d81d-default-rtdb.asia-southeast1.firebasedatabase.app/";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.home_page);
+
+        btnAddAnnouncement = findViewById(R.id.btnAddAnnouncement);
+        recyclerViewAnnouncements = findViewById(R.id.recyclerViewAnnouncements);
+        recyclerViewAnnouncements.setLayoutManager(new LinearLayoutManager(this));
 
         // Initialize Firebase and UI components
         auth = FirebaseAuth.getInstance();
@@ -47,6 +61,8 @@ public class HomePage extends AppCompatActivity {
         user = auth.getCurrentUser();
         database = FirebaseDatabase.getInstance(databaseURL);
         ref = database.getReference("Users");
+        userRef = FirebaseDatabase.getInstance(databaseURL).getReference("Users").child(user.getUid());
+        announcementsRef = FirebaseDatabase.getInstance(databaseURL).getReference("Announcements");
 
         // Check if user is logged in
         if (user == null) {
@@ -55,6 +71,16 @@ public class HomePage extends AppCompatActivity {
         } else {
             loadProfilePictureandUsername(user.getUid());
         }
+
+        announcementAdapter = new AnnouncementAdapter(this, announcementList);
+        recyclerViewAnnouncements.setAdapter(announcementAdapter);
+
+        checkAdminRole();
+        loadAnnouncements();
+
+        btnAddAnnouncement.setOnClickListener(v -> {
+            startActivity(new Intent(HomePage.this, CreateAnnouncementActivity.class));
+        });
 
         // Logout functionality
         logoutBtn.setOnClickListener(v -> {
@@ -82,6 +108,53 @@ public class HomePage extends AppCompatActivity {
                 return true;
             }
             return false;
+        });
+    }
+
+    private void checkAdminRole() {
+        userRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.exists()) {
+                    String role = snapshot.child("role").getValue(String.class);
+
+                    // Check if role exists and is "admin"
+                    if ("admin".equals(role)) {
+                        btnAddAnnouncement.setVisibility(View.VISIBLE);
+                    } else {
+                        btnAddAnnouncement.setVisibility(View.GONE);
+                    }
+                } else {
+                    // Handle case where user node does not exist
+                    Log.d("AdminCheck", "User snapshot does not exist.");
+                    btnAddAnnouncement.setVisibility(View.GONE);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Log.e("AdminCheck", "Error: " + error.getMessage());
+                btnAddAnnouncement.setVisibility(View.GONE);
+            }
+        });
+    }
+
+    private void loadAnnouncements() {
+        announcementsRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                announcementList.clear();
+                for (DataSnapshot data : snapshot.getChildren()) {
+                    Announcement announcement = data.getValue(Announcement.class);
+                    announcementList.add(announcement);
+                }
+                announcementAdapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Toast.makeText(HomePage.this, "Failed to load announcements", Toast.LENGTH_SHORT).show();
+            }
         });
     }
 
