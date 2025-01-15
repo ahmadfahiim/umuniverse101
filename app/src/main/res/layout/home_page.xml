@@ -13,7 +13,6 @@
         android:id="@+id/content_area"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginBottom="56dp"
         android:fillViewport="true"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toTopOf="@id/bottomNavigationBar"
@@ -114,60 +113,21 @@
                 android:textSize="19sp"
                 android:textStyle="bold" />
 
-            <!-- First Card -->
-            <LinearLayout
-                android:layout_width="match_parent"
+            <Button
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_margin="16dp"
-                android:orientation="vertical"
-                android:padding="16dp"
-                android:background="@drawable/login_container">
+                android:text="Add Announcement"
+                android:id="@+id/btnAddAnnouncement"
+                android:layout_marginStart="11dp"/>
 
-                <ImageView
-                    android:layout_width="match_parent"
-                    android:layout_height="180dp"
-                    android:contentDescription="Welcome"
-                    android:src="@drawable/universiti"
-                    android:background="@drawable/photo_rounded_corner"
-                    android:scaleType="centerCrop"
-                    android:clipToOutline="true"/>
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:text="Welcome to the UMUniVerse application!
-                                  We urge everyone to join the events of your choice."
-                    android:textSize="16sp" />
-            </LinearLayout>
-
-            <!-- Second Card -->
-            <LinearLayout
+            <!-- RecyclerView -->
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerViewAnnouncements"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="16dp"
-                android:orientation="vertical"
+                android:layout_height="match_parent"
                 android:padding="16dp"
-                android:background="@drawable/login_container">
+                android:clipToPadding="false" />
 
-
-                <ImageView
-                    android:layout_width="match_parent"
-                    android:layout_height="180dp"
-                    android:contentDescription="update"
-                    android:src="@drawable/update"
-                    android:background="@drawable/photo_rounded_corner"
-                    android:scaleType="centerCrop"
-                    android:clipToOutline="true"/>
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:text="Updates are coming your way.
-                                   Stay tuned for more exciting features in the future!"
-                    android:textSize="16sp" />
-            </LinearLayout>
         </LinearLayout>
     </ScrollView>
 

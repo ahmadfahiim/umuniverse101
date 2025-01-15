@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp"
+    android:background="@color/white">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <!-- Title Input -->
+        <EditText
+            android:id="@+id/etTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Enter Title"
+            android:textSize="16sp"
+            android:padding="12dp"
+            android:background="@drawable/login_container"
+            android:inputType="text" />
+
+        <!-- Description Input -->
+        <EditText
+            android:id="@+id/etDescription"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Enter Description"
+            android:textSize="16sp"
+            android:padding="12dp"
+            android:layout_marginTop="16dp"
+            android:background="@drawable/login_container"
+            android:inputType="textMultiLine"
+            android:minLines="5" />
+
+        <!-- Image URL Input -->
+        <EditText
+            android:id="@+id/etImageUrl"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Enter Image URL"
+            android:textSize="16sp"
+            android:padding="12dp"
+            android:layout_marginTop="16dp"
+            android:background="@drawable/login_container"
+            android:inputType="textUri" />
+
+        <!-- Submit Button -->
+        <Button
+            android:id="@+id/btnSubmit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Submit Announcement"
+            android:textSize="16sp"
+            android:layout_marginTop="24dp"
+            android:padding="12dp"
+            android:backgroundTint="@color/blue"
+            android:textColor="@color/white" />
+    </LinearLayout>
+</ScrollView>
