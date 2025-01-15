@@ -18,6 +18,9 @@ import com.google.firebase.database.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class EventPage extends AppCompatActivity {
 
@@ -49,12 +52,11 @@ public class EventPage extends AppCompatActivity {
         });
         recyclerView.setAdapter(eventAdapter);
 
-        Button sortByRelevanceButton = findViewById(R.id.sortByRelevanceButton);
+        sortByRelevanceButton = findViewById(R.id.sortByRelevanceButton);
         sortByRelevanceButton.setOnClickListener(v -> {
             sortEventsByRelevance();
             Toast.makeText(this, "Events sorted by relevance", Toast.LENGTH_SHORT).show();
         });
-
 
         fetchEventsFromFirebase();
 
@@ -158,11 +160,21 @@ public class EventPage extends AppCompatActivity {
     }
 
     private void sortEventsByRelevance() {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+
         Collections.sort(eventList, (event1, event2) -> {
-            int dateComparison = event1.getDate().compareTo(event2.getDate());
-            if (dateComparison != 0) {
-                return dateComparison;
+            try {
+                Date date1 = dateFormat.parse(event1.getDate());
+                Date date2 = dateFormat.parse(event2.getDate());
+
+                int dateComparison = date1.compareTo(date2);
+                if (dateComparison != 0) {
+                    return dateComparison;
+                }
+            } catch (ParseException e) {
+                e.printStackTrace();
             }
+
             int startTimeComparison = event1.getStartTime().compareTo(event2.getStartTime());
             if (startTimeComparison != 0) {
                 return startTimeComparison;
@@ -170,7 +182,7 @@ public class EventPage extends AppCompatActivity {
 
             return event1.getLocation().compareTo(event2.getLocation());
         });
+
         eventAdapter.notifyDataSetChanged();
     }
-
 }

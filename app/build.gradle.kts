@@ -12,7 +12,7 @@ android {
 
     defaultConfig {
         applicationId = "com.example.firebase"
-        minSdk = 24
+        minSdk = 26
         targetSdk = 34 // Match compileSdkVersion to avoid compatibility issues
         versionCode = 1
         versionName = "1.0"
@@ -73,6 +73,7 @@ dependencies {
 
     implementation ("androidx.appcompat:appcompat:1.6.1")
     implementation ("androidx.core:core-ktx:1.9.0")
+
 
     // Firebase dependencies
     implementation(platform("com.google.firebase:firebase-bom:33.7.0")) // Firebase BOM for version management
